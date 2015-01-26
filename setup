@@ -20,7 +20,8 @@
 package_version=5.3.0
 package_release=$package_version.dp1
 package_name=lua-$package_release
-package_url=https://github.com/dromozoa/lua/releases/download/v$package_release/$package_name.tar.gz
+package_filename=$package_name.tar.gz
+package_url=https://github.com/dromozoa/lua/releases/download/v$package_release/$package_filename
 
 if (unset CDPATH) >/dev/null 2>&1
 then
@@ -31,6 +32,9 @@ case x$PATH in
   x) PATH=/usr/bin:/bin:/usr/sbin:/sbin;;
 esac
 export PATH
+
+here=`dirname "$0"`
+here=`(cd "$here" && pwd)`
 
 case x$dromozoa_prefix in
   x) echo 'dromozoa_prefix is unset or null' >&2; exit 1;;
@@ -76,10 +80,12 @@ then
   :
 else
   curl -fLO "$package_url"
-  gunzip -cd "$package_name.tar.gz" | tar xf -
+  gunzip -cd "$package_filename" | tar xf -
   cd "$package_name"
   ./configure --prefix="$dromozoa_prefix"
   make
   make check
   make install
 fi
+
+curl -fL "file://$here/setup.lua" | lua
