@@ -126,3 +126,15 @@ do
     build(package_name)
   end
 end
+
+do
+  local package_version = "2.0.3"
+  local package_name = "tig-" .. package_version
+  local package_url = "file:///Users/moyu/Downloads/" .. package_name .. ".tar.gz"
+
+  local current_version = eval("tig --version 2>/dev/null || :"):match(" ([%.%d]+)")
+  if current_version ~= package_version then
+    fetch(package_url)
+    build(package_name)
+  end
+end
