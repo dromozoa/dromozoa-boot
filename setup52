@@ -1,6 +1,6 @@
 #! /bin/sh -e
 
-# Copyright (C) 2015,2016 Tomoyuki Fujimori <moyu@dromozoa.com>
+# Copyright (C) 2016 Tomoyuki Fujimori <moyu@dromozoa.com>
 #
 # This file is part of dromozoa-boot.
 #
@@ -63,7 +63,7 @@ cd "$tmp"
 tmp=`pwd`
 trap "(cd / && rm -f -r '$tmp')" 0
 
-package_version=5.3.3
+package_version=5.2.4
 autotoolize_version=1.1
 package_name=lua-$package_version.dromozoa-autotoolize-$autotoolize_version
 package_filename=$package_name.tar.gz
