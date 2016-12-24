@@ -17,6 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with dromozoa-boot.  If not, see <http://www.gnu.org/licenses/>.
 
-url=https://github.com/dromozoa/dromozoa-boot/raw/develop
+url=https://github.com/dromozoa/dromozoa-boot/raw/master
 curl -fL "$url/package-lua" | env dromozoa_lua_version=51 sh -e
 curl -fL "$url/package-luarocks" | env sh -e
