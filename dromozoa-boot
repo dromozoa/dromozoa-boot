@@ -89,20 +89,36 @@ fn_version() {
   fi
 }
 
-check_version=bad
-fn_check_version() {
+version_eq=bad
+fn_version_eq() {
   package_version=$1
   shift
   printf 'checking version of %s...' "$1"
   current_version=`fn_version "$@"`
   case x$current_version in
-    x) current_version="not found";;
+    x)
+      current_version="not found"
+      version_eq=bad;;
+    x$package_version)
+      version_eq=ok;;
+    *)
+      version_eq=bad;;
   esac
+  echo " $current_version, $version_eq"
+}
+
+version_any=bad
+fn_version_any() {
+  printf 'checking version of %s...' "$1"
+  current_version=`fn_version "$@"`
   case x$current_version in
-    x$package_version) check_version=ok;;
-    *) check_version=bad;;
+    x)
+      current_version="not found"
+      version_any=bad;;
+    *)
+      version_any=ok;;
   esac
-  echo " $current_version, $check_version"
+  echo " $current_version, $version_any"
 }
 
 fn_prepare() {
@@ -119,8 +135,8 @@ fn_package_lua() {
   autotoolize_version=1.1
   package_version=$1
   package_url="https://dromozoa.s3.amazonaws.com/pub/dromozoa-autotoolize/$autotoolize_version/lua-$package_version.dromozoa-autotoolize-$autotoolize_version.tar.gz"
-  fn_check_version "$package_version" lua -v
-  case x$check_version in
+  fn_version_eq "$package_version" lua -v
+  case x$version_eq in
     xok) return;;
   esac
   fn_prepare "$package_url"
@@ -144,13 +160,81 @@ fn_package_lua53() {
 fn_package_luarocks() {
   package_version=2.4.2
   package_url=https://luarocks.github.io/luarocks/releases/luarocks-$package_version.tar.gz
-  fn_check_version "$package_version" luarocks --version
-  case x$check_version in
+  fn_version_eq "$package_version" luarocks --version
+  case x$version_eq in
     xok) return;;
   esac
   fn_prepare "$package_url"
   ./configure --prefix="$prefix"
   make bootstrap
+}
+
+fn_package_autoconf() {
+  fn_version_any m4 --version
+  case x$version_any in
+    xbad) exit 1;;
+  esac
+  fn_version_any perl --version
+  case x$version_any in
+    xbad) exit 1;;
+  esac
+  package_version=2.69
+  package_url=https://ftp.gnu.org/gnu/autoconf/autoconf-$package_version.tar.gz
+  fn_version_eq "$package_version" autoconf --version
+  case x$version_eq in
+    xok) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make
+  make install
+}
+
+fn_package_automake() {
+  fn_version_any perl --version
+  case x$version_any in
+    xbad) exit 1;;
+  esac
+  package_version=1.15
+  package_url=https://ftp.gnu.org/gnu/automake/automake-$package_version.tar.gz
+  fn_version_eq "$package_version" automake --version
+  case x$version_eq in
+    xok) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make
+  make install
+}
+
+fn_package_libtool() {
+  package_version=2.4.6
+  package_url=https://ftp.gnu.org/gnu/libtool/libtool-$package_version.tar.gz
+  fn_version_eq "$package_version" libtool --version
+  case x$version_eq in
+    xok) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make
+  make install
+}
+
+fn_package_tig() {
+  fn_version_any git --version
+  case x$version_any in
+    xbad) exit 1;;
+  esac
+  package_version=2.2.1
+  package_url=https://github.com/jonas/tig/releases/download/tig-$package_version/tig-$package_version.tar.gz
+  fn_version_eq "$package_version" tig --version
+  case x$version_eq in
+    xok) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make
+  make install
 }
 
 case x$TMPDIR in
