@@ -1,0 +1,119 @@
+#! /bin/sh -e
+
+# Copyright (C) 2016 Tomoyuki Fujimori <moyu@dromozoa.com>
+#
+# This file is part of dromozoa-boot.
+#
+# dromozoa-boot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# dromozoa-boot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with dromozoa-boot.  If not, see <http://www.gnu.org/licenses/>.
+
+if (unset CDPATH) >/dev/null 2>&1
+then
+  unset CDPATH
+fi
+
+case x$PATH in
+  x) PATH=/usr/bin:/bin:/usr/sbin:/sbin;;
+esac
+export PATH
+
+while :
+do
+  case x$# in
+    x0) break;;
+  esac
+  case x$1 in
+    x--prefix)
+      shift
+      prefix=$1
+      shift
+      ;;
+    x--prefix=*)
+      prefix=`expr "x$1" : 'x--prefix=\(.*\)'`
+      shift
+      ;;
+    x--)
+      shift
+      break
+      ;;
+    x-*)
+      echo "invalid option" >&2
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+fn_basename() {
+  expr "x$1" : 'x.*/\([^/][^/]*\)/*$' '|' "x$1" : 'x\(//\)$' '|' "x$1" : 'x\(/\)' '|' .
+}
+
+fn_dirname() {
+  expr "x$1" : 'x\(.*[^/]\)//*[^/][^/]*/*$' '|' "x$1" : 'x\(//\)[^/]' '|' "x$1" : 'x\(//\)$' '|' "x$1" : 'x\(/\)' '|' .
+}
+
+fn_version() {
+  if "$@" >/dev/null 2>&1
+  then
+    result=`"$@" 2>&1`
+    expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)'
+  else
+    echo ""
+  fi
+}
+
+fn_fetch() {
+  curl -fLO "$1"
+  fn_basename "$1"
+}
+
+fn_extract() {
+  case x$1 in
+    x*.tar.gz)
+      gunzip -cd "$1" | tar xf -
+      ;;
+  esac
+}
+
+fn_package() {
+  curl -fLO "$1"
+  filename=`fn_basename "$1"`
+  case x$filename in
+    x*.tar.gz)
+      gunzip -cd "$filename" | tar xf -
+      ;;
+  esac
+  basename=`expr "x$filename" : 'x\(.*\)\.tar'`
+  oldcwd=`pwd`
+  cd "$basename"
+  ./configure --prefix="$prefix"
+  make
+  make install
+  cd "$oldcwd"
+}
+
+case x$TMPDIR in
+  x) TMPDIR=/tmp;;
+esac
+tmp=`(umask 077 && mktemp -d "$TMPDIR/dromozoa-XXXXXX" 2>/dev/null || :)`
+case x$tmp in
+  x) tmp=$TMPDIR/dromozoa-$$-$RANDOM; (umask 077 && mkdir "$tmp");;
+esac
+cd "$tmp"
+tmp=`pwd`
+trap "(cd / && rm -fr '$tmp')" 0
+
+package_url=https://dromozoa.s3.amazonaws.com/pub/dromozoa-autotoolize/1.1/lua-5.3.3.dromozoa-autotoolize-1.1.tar.gz
+fn_package "$package_url"
