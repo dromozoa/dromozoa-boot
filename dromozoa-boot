@@ -22,11 +22,7 @@ then
   unset CDPATH
 fi
 
-case x$PATH in
-  x) PATH=/usr/bin:/bin:/usr/sbin:/sbin;;
-esac
-export PATH
-
+prefix=
 while :
 do
   case x$# in
@@ -55,6 +51,27 @@ do
       ;;
   esac
 done
+case x$prefix in
+  x) echo "prefix is unset or null" >&2; exit 1;;
+esac
+
+case x$PATH in
+  x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
+  *) PATH=$prefix/bin:$PATH;;
+esac
+export PATH
+
+case x$CPPFLAGS in
+  x) CPPFLAGS="-I$prefix/include";;
+  *) CPPFLAGS="-I$prefix/include $CPPFLAGS";;
+esac
+export CPPFLAGS
+
+case x$LDFLAGS in
+  x) LDFLAGS="-L$prefix/lib";;
+  *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
+esac
+export LDFLAGS
 
 fn_basename() {
   expr "x$1" : 'x.*/\([^/][^/]*\)/*$' '|' "x$1" : 'x\(//\)$' '|' "x$1" : 'x\(/\)' '|' .
@@ -68,40 +85,60 @@ fn_version() {
   if "$@" >/dev/null 2>&1
   then
     result=`"$@" 2>&1`
-    expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)'
-  else
-    echo ""
+    expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' || :
   fi
 }
 
-fn_fetch() {
-  curl -fLO "$1"
-  fn_basename "$1"
-}
-
-fn_extract() {
-  case x$1 in
-    x*.tar.gz)
-      gunzip -cd "$1" | tar xf -
-      ;;
+check_version=bad
+fn_check_version() {
+  package_version=$1
+  shift
+  printf 'checking version of %s...' "$1"
+  current_version=`fn_version "$@"`
+  case x$current_version in
+    x) current_version="not found";;
   esac
+  case x$current_version in
+    x$package_version) check_version=ok;;
+    *) check_version=bad;;
+  esac
+  echo " $current_version, $check_version"
 }
 
-fn_package() {
+fn_prepare() {
   curl -fLO "$1"
   filename=`fn_basename "$1"`
   case x$filename in
-    x*.tar.gz)
-      gunzip -cd "$filename" | tar xf -
-      ;;
+    x*.tar.gz) gunzip -cd "$filename" | tar xf -;;
   esac
   basename=`expr "x$filename" : 'x\(.*\)\.tar'`
-  oldcwd=`pwd`
   cd "$basename"
+}
+
+fn_package_lua() {
+  autotoolize_version=1.1
+  package_version=$1
+  package_url="https://dromozoa.s3.amazonaws.com/pub/dromozoa-autotoolize/$autotoolize_version/lua-$package_version.dromozoa-autotoolize-$autotoolize_version.tar.gz"
+  fn_check_version "$package_version" lua -v
+  case x$check_version in
+    xok) return;;
+  esac
+  fn_prepare "$package_url"
   ./configure --prefix="$prefix"
   make
   make install
-  cd "$oldcwd"
+}
+
+fn_package_lua51() {
+  fn_package_lua 5.1.5
+}
+
+fn_package_lua52() {
+  fn_package_lua 5.2.4
+}
+
+fn_package_lua53() {
+  fn_package_lua 5.3.3
 }
 
 case x$TMPDIR in
@@ -115,5 +152,7 @@ cd "$tmp"
 tmp=`pwd`
 trap "(cd / && rm -fr '$tmp')" 0
 
-package_url=https://dromozoa.s3.amazonaws.com/pub/dromozoa-autotoolize/1.1/lua-5.3.3.dromozoa-autotoolize-1.1.tar.gz
-fn_package "$package_url"
+for package in "$@"
+do
+  "fn_package_$package"
+done
