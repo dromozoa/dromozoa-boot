@@ -141,6 +141,18 @@ fn_package_lua53() {
   fn_package_lua 5.3.3
 }
 
+fn_package_luarocks() {
+  package_version=2.4.2
+  package_url=https://luarocks.github.io/luarocks/releases/luarocks-$package_version.tar.gz
+  fn_check_version "$package_version" luarocks --version
+  case x$check_version in
+    xok) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make bootstrap
+}
+
 case x$TMPDIR in
   x) TMPDIR=/tmp;;
 esac
