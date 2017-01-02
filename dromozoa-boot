@@ -22,6 +22,7 @@ then
   unset CDPATH
 fi
 
+dry_run=false
 help=false
 list=false
 prefix=
@@ -31,6 +32,8 @@ do
     x0) break;;
   esac
   case x$1 in
+    x-dry-run|x-dry-ru|x-dry-r|x-dry-|x-dry|x-dr|x-d|x--dry-run|x--dry-ru|x--dry-r|x--dry-|x--dry|x--dr|x--d)
+      shift; dry_run=true;;
     x-help|x-hel|x-he|x-h|x--help|x--hel|x--he|x--h)
       shift; help=true;;
     x-list|x-lis|x-li|x-l|x--list|x--lis|x--li|x--l)
@@ -50,13 +53,17 @@ do
       break;;
   esac
 done
+
 case x$help in
   xtrue)
-    echo "$0 --help"
-    echo "$0 --list"
-    echo "$0 --prefix=PREFIX PACKAGE..."
+    cat <<EOH
+$0 --help
+$0 --list
+$0 --prefix=PREFIX [--dry-run] PACKAGE...
+EOH
     exit;;
 esac
+
 case x$list in
   xtrue)
     for package in lua51 lua52 lua53 luarocks autoconf automake libtool tig
@@ -65,6 +72,7 @@ case x$list in
     done
     exit;;
 esac
+
 case x$prefix in
   x) echo "prefix is unset or null" >&2; exit 1;;
 esac
