@@ -30,30 +30,21 @@ do
     x0) break;;
   esac
   case x$1 in
-    x-h|x--help)
-      shift
-      help=yes
-      ;;
-    x--prefix)
-      shift
-      prefix=$1
-      shift
-      ;;
-    x--prefix=*)
-      prefix=`expr "x$1" : 'x--prefix=\(.*\)'`
-      shift
-      ;;
+    x-help|x-hel|x-he|x-h|x--help|x--hel|x--he|x--h)
+      shift; help=yes;;
+    x-prefix|x-prefi|x-pref|x-pre|x-pr|x-p|x--prefix|x--prefi|x--pref|x--pre|x--pr|x--p)
+      case x$# in
+        x1) echo "missing argument to $1" >&2; exit 1;;
+      esac
+      shift; prefix=$1; shift;;
+    x--prefix=*|x--prefi=*|x--pref=*|x--pre=*|x--pr=*|x--p=*)
+      prefix=`expr "x$1" : 'x--p[^=]*=\(.*\)'`; shift;;
     x--)
-      shift
-      break
-      ;;
+      shift; break;;
     x-*)
-      echo "invalid option" >&2
-      exit 1
-      ;;
+      echo "unrecognized option $1" >&2; exit 1;;
     *)
-      break
-      ;;
+      break;;
   esac
 done
 case x$help in
@@ -62,7 +53,6 @@ case x$help in
     exit
     ;;
 esac
-
 case x$prefix in
   x) echo "prefix is unset or null" >&2; exit 1;;
 esac
