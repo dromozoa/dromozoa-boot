@@ -22,8 +22,8 @@ then
   unset CDPATH
 fi
 
-help=no
-list=no
+help=false
+list=false
 prefix=
 while :
 do
@@ -32,9 +32,9 @@ do
   esac
   case x$1 in
     x-help|x-hel|x-he|x-h|x--help|x--hel|x--he|x--h)
-      shift; help=yes;;
+      shift; help=true;;
     x-list|x-lis|x-li|x-l|x--list|x--lis|x--li|x--l)
-      shift; list=yes;;
+      shift; list=true;;
     x-prefix|x-prefi|x-pref|x-pre|x-pr|x-p|x--prefix|x--prefi|x--pref|x--pre|x--pr|x--p)
       case x$# in
         x1) echo "missing argument to $1" >&2; exit 1;;
@@ -51,14 +51,14 @@ do
   esac
 done
 case x$help in
-  xyes)
+  xtrue)
     echo "$0 --help"
     echo "$0 --list"
     echo "$0 --prefix=PREFIX PACKAGE..."
     exit;;
 esac
 case x$list in
-  xyes)
+  xtrue)
     for package in lua51 lua52 lua53 luarocks autoconf automake libtool tig
     do
       echo "$package"
