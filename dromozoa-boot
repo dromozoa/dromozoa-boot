@@ -23,6 +23,7 @@ then
 fi
 
 help=no
+list=no
 prefix=
 while :
 do
@@ -32,6 +33,8 @@ do
   case x$1 in
     x-help|x-hel|x-he|x-h|x--help|x--hel|x--he|x--h)
       shift; help=yes;;
+    x-list|x-lis|x-li|x-l|x--list|x--lis|x--li|x--l)
+      shift; list=yes;;
     x-prefix|x-prefi|x-pref|x-pre|x-pr|x-p|x--prefix|x--prefi|x--pref|x--pre|x--pr|x--p)
       case x$# in
         x1) echo "missing argument to $1" >&2; exit 1;;
@@ -49,9 +52,18 @@ do
 done
 case x$help in
   xyes)
+    echo "$0 --help"
+    echo "$0 --list"
     echo "$0 --prefix=PREFIX PACKAGE..."
-    exit
-    ;;
+    exit;;
+esac
+case x$list in
+  xyes)
+    for package in lua51 lua52 lua53 luarocks autoconf automake libtool tig
+    do
+      echo "$package"
+    done
+    exit;;
 esac
 case x$prefix in
   x) echo "prefix is unset or null" >&2; exit 1;;
