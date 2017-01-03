@@ -57,6 +57,10 @@ fn_package_version_lua53() {
   echo 5.3.3
 }
 
+fn_package_version_luajit() {
+  echo 2.0.4
+}
+
 fn_package_version_luarocks() {
   echo 2.4.2
 }
@@ -210,6 +214,19 @@ fn_package_lua52() {
 
 fn_package_lua53() {
   fn_package_lua "$@"
+}
+
+fn_package_luajit() {
+  package=$1
+  package_version=$2
+  package_url="https://luajit.org/download/LuaJIT-$package_version.tar.gz"
+  fn_check "$package_version" luajit -v
+  case x$check in
+    xtrue) return;;
+  esac
+  fn_prepare "$package_url"
+  make PREFIX="$prefix"
+  make PREFIX="$prefix" install
 }
 
 fn_package_luarocks() {
