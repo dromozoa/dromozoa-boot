@@ -1,0 +1,320 @@
+#! /bin/sh -e
+
+# Copyright (C) 2016 Tomoyuki Fujimori <moyu@dromozoa.com>
+#
+# This file is part of dromozoa-boot.
+#
+# dromozoa-boot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# dromozoa-boot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with dromozoa-boot.  If not, see <http://www.gnu.org/licenses/>.
+
+if (unset CDPATH) >/dev/null 2>&1
+then
+  unset CDPATH
+fi
+
+fn_basename() {
+  expr "x$1" : 'x.*/\([^/][^/]*\)/*$' \
+    '|' "x$1" : 'x\(//\)$' \
+    '|' "x$1" : 'x\(/\)' \
+    '|' .
+}
+
+fn_dirname() {
+  expr "x$1" : 'x\(.*[^/]\)//*[^/][^/]*/*$' \
+    '|' "x$1" : 'x\(//\)[^/]' \
+    '|' "x$1" : 'x\(//\)$' \
+    '|' "x$1" : 'x\(/\)' \
+    '|' .
+}
+
+fn_version() {
+  if "$@" >/dev/null 2>&1
+  then
+    result=`"$@" 2>&1`
+    expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' || :
+  fi
+}
+
+fn_package_version_lua51() {
+  echo 5.1.5
+}
+
+fn_package_version_lua52() {
+  echo 5.2.4
+}
+
+fn_package_version_lua53() {
+  echo 5.3.3
+}
+
+fn_package_version_luajit() {
+  echo 2.0.4
+}
+
+fn_package_version_luarocks() {
+  echo 2.4.2
+}
+
+fn_package_version_autoconf() {
+  echo 2.69
+}
+
+fn_package_version_automake() {
+  echo 1.15
+}
+
+fn_package_version_libtool() {
+  echo 2.4.6
+}
+
+fn_package_version_tig() {
+  echo 2.2.1
+}
+
+command=install
+prefix=
+while :
+do
+  case x$# in
+    x0) break;;
+  esac
+  case x$1 in
+    x-help|x-hel|x-he|x-h|x--help|x--hel|x--he|x--h)
+      shift; command=help;;
+    x-list|x-lis|x-li|x-l|x--list|x--lis|x--li|x--l)
+      shift; command=list;;
+    x-prefix|x-prefi|x-pref|x-pre|x-pr|x-p|x--prefix|x--prefi|x--pref|x--pre|x--pr|x--p)
+      case x$# in
+        x1) echo "missing argument to $1" >&2; exit 1;;
+      esac
+      shift; prefix=$1; shift;;
+    x--prefix=*|x--prefi=*|x--pref=*|x--pre=*|x--pr=*|x--p=*)
+      prefix=`expr "x$1" : 'x--p[^=]*=\(.*\)'`; shift;;
+    x--)
+      shift; break;;
+    x-*)
+      echo "unrecognized option $1" >&2; exit 1;;
+    *)
+      break;;
+  esac
+done
+
+case x$command in
+  xhelp)
+    cat <<EOH
+$0 --help
+$0 --list
+$0 --prefix=PREFIX PACKAGE...
+EOH
+    exit;;
+  xlist)
+    for package in lua51 lua52 lua53 luajit luarocks autoconf automake libtool tig
+    do
+      package_version=`"fn_package_version_$package"`
+      echo "$package $package_version"
+    done
+    exit;;
+esac
+
+case x$prefix in
+  x) echo "prefix is unset or null" >&2; exit 1;;
+esac
+mkdir -p "$prefix"
+prefix=`(cd "$prefix" && pwd)`
+
+case x$PATH in
+  x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
+  *) PATH=$prefix/bin:$PATH;;
+esac
+export PATH
+case x$CPPFLAGS in
+  x) CPPFLAGS="-I$prefix/include";;
+  *) CPPFLAGS="-I$prefix/include $CPPFLAGS";;
+esac
+export CPPFLAGS
+case x$LDFLAGS in
+  x) LDFLAGS="-L$prefix/lib";;
+  *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
+esac
+export LDFLAGS
+
+fn_require() {
+  printf "checking version of $1..."
+  current_version=`fn_version "$@"`
+  case x$current_version in
+    x) echo " not found, error"; exit 1;;
+  esac
+  echo " $current_version, ok"
+}
+
+check=false
+fn_check() {
+  package_version=$1
+  shift
+  printf "checking version of $1..."
+  current_version=`fn_version "$@"`
+  case x$current_version in
+    x) current_version="not found";;
+  esac
+  case x$current_version in
+    x$package_version)
+      echo " $current_version, skip"
+      check=true;;
+    *)
+      echo " $current_version, install"
+      check=false;;
+  esac
+}
+
+fn_prepare() {
+  echo "fetching $1..."
+  curl -fLO "$1"
+  filename=`fn_basename "$1"`
+  echo "extracting $filename..."
+  case x$filename in
+    x*.tar.gz) gunzip -cd "$filename" | tar xf -;;
+  esac
+  basename=`expr "x$filename" : 'x\(.*\)\.tar'`
+  echo "building in $basename..."
+  cd "$basename"
+}
+
+fn_package_lua() {
+  autotoolize_version=1.1
+  package=$1
+  package_version=$2
+  package_url="https://dromozoa.s3.amazonaws.com/pub/dromozoa-autotoolize/$autotoolize_version/lua-$package_version.dromozoa-autotoolize-$autotoolize_version.tar.gz"
+  fn_check "$package_version" lua -v
+  case x$check in
+    xtrue) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make
+  make install
+}
+
+fn_package_lua51() {
+  fn_package_lua "$@"
+}
+
+fn_package_lua52() {
+  fn_package_lua "$@"
+}
+
+fn_package_lua53() {
+  fn_package_lua "$@"
+}
+
+fn_package_luajit() {
+  package=$1
+  package_version=$2
+  package_url="https://luajit.org/download/LuaJIT-$package_version.tar.gz"
+  fn_check "$package_version" luajit -v
+  case x$check in
+    xtrue) return;;
+  esac
+  fn_prepare "$package_url"
+  make PREFIX="$prefix"
+  make PREFIX="$prefix" install
+}
+
+fn_package_luarocks() {
+  package=$1
+  package_version=$2
+  package_url=https://luarocks.github.io/luarocks/releases/luarocks-$package_version.tar.gz
+  fn_check "$package_version" luarocks --version
+  case x$check in
+    xtrue) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make bootstrap
+}
+
+fn_package_autoconf() {
+  package=$1
+  package_version=$2
+  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
+  fn_require m4 --version
+  fn_require perl --version
+  fn_check "$package_version" autoconf --version
+  case x$check in
+    xtrue) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make
+  make install
+}
+
+fn_package_automake() {
+  package=$1
+  package_version=$2
+  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
+  fn_require perl --version
+  fn_check "$package_version" automake --version
+  case x$check in
+    xtrue) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make
+  make install
+}
+
+fn_package_libtool() {
+  package=$1
+  package_version=$2
+  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
+  fn_check "$package_version" libtool --version
+  case x$check in
+    xtrue) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make
+  make install
+}
+
+fn_package_tig() {
+  package=$1
+  package_version=$2
+  package_url=https://github.com/jonas/tig/releases/download/tig-$package_version/tig-$package_version.tar.gz
+  fn_require git --version
+  fn_check "$package_version" tig --version
+  case x$check in
+    xtrue) return;;
+  esac
+  fn_prepare "$package_url"
+  ./configure --prefix="$prefix"
+  make
+  make install
+}
+
+case x$TMPDIR in
+  x) TMPDIR=/tmp;;
+esac
+tmp=`(umask 077 && mktemp -d "$TMPDIR/dromozoa-XXXXXX" 2>/dev/null || :)`
+case x$tmp in
+  x) tmp=$TMPDIR/dromozoa-$$-$RANDOM; (umask 077 && mkdir "$tmp");;
+esac
+cd "$tmp"
+tmp=`pwd`
+trap "(cd / && rm -fr '$tmp')" 0
+
+for package in "$@"
+do
+  package_version=`"fn_package_version_$package"`
+  "fn_package_$package" "$package" "$package_version"
+done

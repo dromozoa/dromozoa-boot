@@ -1,19 +1,25 @@
 # dromozoa-boot
 
-## Lua 5.1
+## synopsis
 
-```sh
-curl -fL https://github.com/dromozoa/dromozoa-boot/raw/master/setup51 | env dromozoa_prefix=/opt/dromozoa51 sh -e
+```bash
+curl -fLO https://github.com/dromozoa/dromozoa-boot/raw/master/dromozoa-boot
+chmod 755 dromozoa-boot
+./dromozoa-boot --list
+./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool tig
+./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks
+./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks
+./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks
 ```
 
-## Lua 5.2
+## packages
 
-```sh
-curl -fL https://github.com/dromozoa/dromozoa-boot/raw/master/setup52 | env dromozoa_prefix=/opt/dromozoa52 sh -e
-```
-
-## Lua 5.3
-
-```sh
-curl -fL https://github.com/dromozoa/dromozoa-boot/raw/master/setup53 | env dromozoa_prefix=/opt/dromozoa53 sh -e
-```
+* [lua51](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.1%2F)
+* [lua52](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.1%2F)
+* [lua53](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.1%2F)
+* [luajit](https://luajit.org/download.html)
+* [luarocks](https://luarocks.github.io/luarocks/releases/)
+* [autoconf](https://ftp.gnu.org/gnu/autoconf/)
+* [automake](https://ftp.gnu.org/gnu/automake/)
+* [libtool](https://ftp.gnu.org/gnu/libtool/)
+* [tig](https://github.com/jonas/tig/releases)
