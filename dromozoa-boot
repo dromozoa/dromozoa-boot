@@ -74,26 +74,30 @@ case x$list in
 esac
 
 case x$prefix in
-  x) echo "prefix is unset or null" >&2; exit 1;;
+  x)
+    case x$list in
+      xfalse)
+        echo "prefix is unset or null" >&2; exit 1;;
+    esac;;
+  *)
+    case x$PATH in
+      x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
+      *) PATH=$prefix/bin:$PATH;;
+    esac
+    export PATH
+    case x$CPPFLAGS in
+      x) CPPFLAGS="-I$prefix/include";;
+      *) CPPFLAGS="-I$prefix/include $CPPFLAGS";;
+    esac
+    export CPPFLAGS
+    case x$LDFLAGS in
+      x) LDFLAGS="-L$prefix/lib";;
+      *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
+    esac
+    export LDFLAGS;;
 esac
 
-case x$PATH in
-  x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
-  *) PATH=$prefix/bin:$PATH;;
-esac
-export PATH
 
-case x$CPPFLAGS in
-  x) CPPFLAGS="-I$prefix/include";;
-  *) CPPFLAGS="-I$prefix/include $CPPFLAGS";;
-esac
-export CPPFLAGS
-
-case x$LDFLAGS in
-  x) LDFLAGS="-L$prefix/lib";;
-  *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
-esac
-export LDFLAGS
 
 fn_basename() {
   expr "x$1" : 'x.*/\([^/][^/]*\)/*$' '|' "x$1" : 'x\(//\)$' '|' "x$1" : 'x\(/\)' '|' .
@@ -151,6 +155,34 @@ fn_prepare() {
   esac
   basename=`expr "x$filename" : 'x\(.*\)\.tar'`
   cd "$basename"
+}
+
+fn_version_lua51() {
+  echo 5.1.5
+}
+
+fn_version_lua52() {
+  echo 5.2.4
+}
+
+fn_version_lua53() {
+  echo 5.3.3
+}
+
+fn_version_autoconf() {
+  echo 2.69
+}
+
+fn_version_automake() {
+  echo 1.15
+}
+
+fn_version_libtool() {
+  echo 2.4.6
+}
+
+fn_version_tig() {
+  echo 2.2.1
 }
 
 fn_package_lua() {
