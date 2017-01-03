@@ -78,7 +78,6 @@ fn_package_version_tig() {
 }
 
 command=install
-dry_run=false
 prefix=
 while :
 do
@@ -86,8 +85,6 @@ do
     x0) break;;
   esac
   case x$1 in
-    x-dry-run|x-dry-ru|x-dry-r|x-dry-|x-dry|x-dr|x-d|x--dry-run|x--dry-ru|x--dry-r|x--dry-|x--dry|x--dr|x--d)
-      shift; dry_run=true;;
     x-help|x-hel|x-he|x-h|x--help|x--hel|x--he|x--h)
       shift; command=help;;
     x-list|x-lis|x-li|x-l|x--list|x--lis|x--li|x--l)
@@ -113,7 +110,7 @@ case x$command in
     cat <<EOH
 $0 --help
 $0 --list
-$0 --prefix=PREFIX [--dry-run] PACKAGE...
+$0 --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   xlist)
@@ -184,12 +181,14 @@ fn_prepare() {
     x*.tar.gz) gunzip -cd "$filename" | tar xf -;;
   esac
   basename=`expr "x$filename" : 'x\(.*\)\.tar'`
+  echo "building in $basename..."
   cd "$basename"
 }
 
 fn_package_lua() {
   autotoolize_version=1.1
-  package_version=$1
+  package=$1
+  package_version=$2
   package_url="https://dromozoa.s3.amazonaws.com/pub/dromozoa-autotoolize/$autotoolize_version/lua-$package_version.dromozoa-autotoolize-$autotoolize_version.tar.gz"
   fn_check "$package_version" lua -v
   case x$check in
@@ -202,19 +201,20 @@ fn_package_lua() {
 }
 
 fn_package_lua51() {
-  fn_package_lua "$1"
+  fn_package_lua "$@"
 }
 
 fn_package_lua52() {
-  fn_package_lua "$1"
+  fn_package_lua "$@"
 }
 
 fn_package_lua53() {
-  fn_package_lua "$1"
+  fn_package_lua "$@"
 }
 
 fn_package_luarocks() {
-  package_version=$1
+  package=$1
+  package_version=$2
   package_url=https://luarocks.github.io/luarocks/releases/luarocks-$package_version.tar.gz
   fn_check "$package_version" luarocks --version
   case x$check in
@@ -226,10 +226,11 @@ fn_package_luarocks() {
 }
 
 fn_package_autoconf() {
+  package=$1
+  package_version=$2
+  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
   fn_require m4 --version
   fn_require perl --version
-  package_version=$1
-  package_url=https://ftp.gnu.org/gnu/autoconf/autoconf-$package_version.tar.gz
   fn_check "$package_version" autoconf --version
   case x$check in
     xtrue) return;;
@@ -241,9 +242,10 @@ fn_package_autoconf() {
 }
 
 fn_package_automake() {
+  package=$1
+  package_version=$2
+  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
   fn_require perl --version
-  package_version=$1
-  package_url=https://ftp.gnu.org/gnu/automake/automake-$package_version.tar.gz
   fn_check "$package_version" automake --version
   case x$check in
     xtrue) return;;
@@ -255,8 +257,9 @@ fn_package_automake() {
 }
 
 fn_package_libtool() {
-  package_version=$1
-  package_url=https://ftp.gnu.org/gnu/libtool/libtool-$package_version.tar.gz
+  package=$1
+  package_version=$2
+  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
   fn_check "$package_version" libtool --version
   case x$check in
     xtrue) return;;
@@ -268,9 +271,10 @@ fn_package_libtool() {
 }
 
 fn_package_tig() {
-  fn_require git --version
-  package_version=$1
+  package=$1
+  package_version=$2
   package_url=https://github.com/jonas/tig/releases/download/tig-$package_version/tig-$package_version.tar.gz
+  fn_require git --version
   fn_check "$package_version" tig --version
   case x$check in
     xtrue) return;;
@@ -295,5 +299,5 @@ trap "(cd / && rm -fr '$tmp')" 0
 for package in "$@"
 do
   package_version=`"fn_package_version_$package"`
-  "fn_package_$package" "$package_version"
+  "fn_package_$package" "$package" "$package_version"
 done
