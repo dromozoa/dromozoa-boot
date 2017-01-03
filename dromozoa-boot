@@ -1,6 +1,6 @@
 #! /bin/sh -e
 
-# Copyright (C) 2016 Tomoyuki Fujimori <moyu@dromozoa.com>
+# Copyright (C) 2016,2017 Tomoyuki Fujimori <moyu@dromozoa.com>
 #
 # This file is part of dromozoa-boot.
 #
@@ -187,6 +187,7 @@ fn_prepare() {
   basename=`expr "x$filename" : 'x\(.*\)\.tar'`
   echo "building in $basename..."
   cd "$basename"
+  pwd
 }
 
 fn_package_lua() {
@@ -315,6 +316,7 @@ trap "(cd / && rm -fr '$tmp')" 0
 
 for package in "$@"
 do
+  cd "$tmp"
   package_version=`"fn_package_version_$package"`
   "fn_package_$package" "$package" "$package_version"
 done
