@@ -118,7 +118,7 @@ $0 --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   xlist)
-    for package in lua51 lua52 lua53 luarocks autoconf automake libtool tig
+    for package in lua51 lua52 lua53 luajit luarocks autoconf automake libtool tig
     do
       package_version=`"fn_package_version_$package"`
       echo "$package $package_version"
