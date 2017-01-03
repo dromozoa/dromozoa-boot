@@ -22,9 +22,63 @@ then
   unset CDPATH
 fi
 
+fn_basename() {
+  expr "x$1" : 'x.*/\([^/][^/]*\)/*$' \
+    '|' "x$1" : 'x\(//\)$' \
+    '|' "x$1" : 'x\(/\)' \
+    '|' .
+}
+
+fn_dirname() {
+  expr "x$1" : 'x\(.*[^/]\)//*[^/][^/]*/*$' \
+    '|' "x$1" : 'x\(//\)[^/]' \
+    '|' "x$1" : 'x\(//\)$' \
+    '|' "x$1" : 'x\(/\)' \
+    '|' .
+}
+
+fn_version() {
+  if "$@" >/dev/null 2>&1
+  then
+    result=`"$@" 2>&1`
+    expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' || :
+  fi
+}
+
+fn_package_version_lua51() {
+  echo 5.1.5
+}
+
+fn_package_version_lua52() {
+  echo 5.2.4
+}
+
+fn_package_version_lua53() {
+  echo 5.3.3
+}
+
+fn_package_version_luarocks() {
+  echo 2.4.2
+}
+
+fn_package_version_autoconf() {
+  echo 2.69
+}
+
+fn_package_version_automake() {
+  echo 1.15
+}
+
+fn_package_version_libtool() {
+  echo 2.4.6
+}
+
+fn_package_version_tig() {
+  echo 2.2.1
+}
+
+command=install
 dry_run=false
-help=false
-list=false
 prefix=
 while :
 do
@@ -35,9 +89,9 @@ do
     x-dry-run|x-dry-ru|x-dry-r|x-dry-|x-dry|x-dr|x-d|x--dry-run|x--dry-ru|x--dry-r|x--dry-|x--dry|x--dr|x--d)
       shift; dry_run=true;;
     x-help|x-hel|x-he|x-h|x--help|x--hel|x--he|x--h)
-      shift; help=true;;
+      shift; command=help;;
     x-list|x-lis|x-li|x-l|x--list|x--lis|x--li|x--l)
-      shift; list=true;;
+      shift; command=list;;
     x-prefix|x-prefi|x-pref|x-pre|x-pr|x-p|x--prefix|x--prefi|x--pref|x--pre|x--pr|x--p)
       case x$# in
         x1) echo "missing argument to $1" >&2; exit 1;;
@@ -54,66 +108,44 @@ do
   esac
 done
 
-case x$help in
-  xtrue)
+case x$command in
+  xhelp)
     cat <<EOH
 $0 --help
 $0 --list
 $0 --prefix=PREFIX [--dry-run] PACKAGE...
 EOH
     exit;;
-esac
-
-case x$list in
-  xtrue)
+  xlist)
     for package in lua51 lua52 lua53 luarocks autoconf automake libtool tig
     do
-      echo "$package"
+      package_version=`"fn_package_version_$package"`
+      echo "$package $package_version"
     done
     exit;;
 esac
 
 case x$prefix in
-  x)
-    case x$list in
-      xfalse)
-        echo "prefix is unset or null" >&2; exit 1;;
-    esac;;
-  *)
-    case x$PATH in
-      x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
-      *) PATH=$prefix/bin:$PATH;;
-    esac
-    export PATH
-    case x$CPPFLAGS in
-      x) CPPFLAGS="-I$prefix/include";;
-      *) CPPFLAGS="-I$prefix/include $CPPFLAGS";;
-    esac
-    export CPPFLAGS
-    case x$LDFLAGS in
-      x) LDFLAGS="-L$prefix/lib";;
-      *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
-    esac
-    export LDFLAGS;;
+  x) echo "prefix is unset or null" >&2; exit 1;;
 esac
+mkdir -p "$prefix"
+prefix=`(cd "$prefix" && pwd)`
 
-
-
-fn_basename() {
-  expr "x$1" : 'x.*/\([^/][^/]*\)/*$' '|' "x$1" : 'x\(//\)$' '|' "x$1" : 'x\(/\)' '|' .
-}
-
-fn_dirname() {
-  expr "x$1" : 'x\(.*[^/]\)//*[^/][^/]*/*$' '|' "x$1" : 'x\(//\)[^/]' '|' "x$1" : 'x\(//\)$' '|' "x$1" : 'x\(/\)' '|' .
-}
-
-fn_version() {
-  if "$@" >/dev/null 2>&1
-  then
-    result=`"$@" 2>&1`
-    expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' || :
-  fi
-}
+case x$PATH in
+  x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
+  *) PATH=$prefix/bin:$PATH;;
+esac
+export PATH
+case x$CPPFLAGS in
+  x) CPPFLAGS="-I$prefix/include";;
+  *) CPPFLAGS="-I$prefix/include $CPPFLAGS";;
+esac
+export CPPFLAGS
+case x$LDFLAGS in
+  x) LDFLAGS="-L$prefix/lib";;
+  *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
+esac
+export LDFLAGS
 
 version_eq=bad
 fn_version_eq() {
@@ -155,34 +187,6 @@ fn_prepare() {
   esac
   basename=`expr "x$filename" : 'x\(.*\)\.tar'`
   cd "$basename"
-}
-
-fn_version_lua51() {
-  echo 5.1.5
-}
-
-fn_version_lua52() {
-  echo 5.2.4
-}
-
-fn_version_lua53() {
-  echo 5.3.3
-}
-
-fn_version_autoconf() {
-  echo 2.69
-}
-
-fn_version_automake() {
-  echo 1.15
-}
-
-fn_version_libtool() {
-  echo 2.4.6
-}
-
-fn_version_tig() {
-  echo 2.2.1
 }
 
 fn_package_lua() {
