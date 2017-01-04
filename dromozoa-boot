@@ -184,10 +184,16 @@ fn_prepare() {
   case x$filename in
     x*.tar.gz) gunzip -cd "$filename" | tar xf -;;
   esac
-  basename=`expr "x$filename" : 'x\(.*\)\.tar'`
-  echo "building in $basename..."
-  cd "$basename"
+  dirname=`expr "x$filename" : 'x\(.*\)\.tar'`
+  echo "building in $dirname..."
+  cd "$dirname"
   pwd
+}
+
+fn_build() {
+  ./configure --prefix="$prefix"
+  make
+  make install
 }
 
 fn_package_lua() {
@@ -200,9 +206,7 @@ fn_package_lua() {
     xtrue) return;;
   esac
   fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
-  make
-  make install
+  fn_build
 }
 
 fn_package_lua51() {
@@ -254,9 +258,7 @@ fn_package_autoconf() {
     xtrue) return;;
   esac
   fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
-  make
-  make install
+  fn_build
 }
 
 fn_package_automake() {
@@ -269,9 +271,7 @@ fn_package_automake() {
     xtrue) return;;
   esac
   fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
-  make
-  make install
+  fn_build
 }
 
 fn_package_libtool() {
@@ -283,9 +283,7 @@ fn_package_libtool() {
     xtrue) return;;
   esac
   fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
-  make
-  make install
+  fn_build
 }
 
 fn_package_tig() {
@@ -298,9 +296,7 @@ fn_package_tig() {
     xtrue) return;;
   esac
   fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
-  make
-  make install
+  fn_build
 }
 
 case x$TMPDIR in
