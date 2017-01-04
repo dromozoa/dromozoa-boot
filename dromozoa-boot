@@ -184,10 +184,16 @@ fn_prepare() {
   case x$filename in
     x*.tar.gz) gunzip -cd "$filename" | tar xf -;;
   esac
-  basename=`expr "x$filename" : 'x\(.*\)\.tar'`
-  echo "building in $basename..."
-  cd "$basename"
+  dirname=`expr "x$filename" : 'x\(.*\)\.tar'`
+  echo "building in $dirname..."
+  cd "$dirname"
   pwd
+}
+
+fn_build() {
+  ./configure --prefix="$prefix"
+  make
+  make install
 }
 
 fn_package_lua() {
@@ -200,9 +206,7 @@ fn_package_lua() {
     xtrue) return;;
   esac
   fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
-  make
-  make install
+  fn_build
 }
 
 fn_package_lua51() {
@@ -243,64 +247,44 @@ fn_package_luarocks() {
   make bootstrap
 }
 
-fn_package_autoconf() {
+fn_package_gnu() {
   package=$1
   package_version=$2
   package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
-  fn_require m4 --version
-  fn_require perl --version
-  fn_check "$package_version" autoconf --version
+  fn_check "$package_version" "$package" --version
   case x$check in
     xtrue) return;;
   esac
   fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
-  make
-  make install
+  fn_build
+}
+
+fn_package_autoconf() {
+  fn_require m4 --version
+  fn_require perl --version
+  fn_package_gnu "$@"
 }
 
 fn_package_automake() {
-  package=$1
-  package_version=$2
-  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
   fn_require perl --version
-  fn_check "$package_version" automake --version
-  case x$check in
-    xtrue) return;;
-  esac
-  fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
-  make
-  make install
+  fn_package_gnu "$@"
 }
 
 fn_package_libtool() {
-  package=$1
-  package_version=$2
-  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
-  fn_check "$package_version" libtool --version
-  case x$check in
-    xtrue) return;;
-  esac
-  fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
-  make
-  make install
+  fn_package_gnu "$@"
 }
 
 fn_package_tig() {
+  fn_require git --version
   package=$1
   package_version=$2
   package_url=https://github.com/jonas/tig/releases/download/tig-$package_version/tig-$package_version.tar.gz
-  fn_require git --version
   fn_check "$package_version" tig --version
   case x$check in
     xtrue) return;;
   esac
   fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
-  make
-  make install
+  fn_build
 }
 
 case x$TMPDIR in
