@@ -6,7 +6,7 @@
 curl -fLO https://github.com/dromozoa/dromozoa-boot/raw/master/dromozoa-boot
 chmod 755 dromozoa-boot
 ./dromozoa-boot --list
-./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool tig
+./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool tig zeromq
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks
@@ -23,3 +23,4 @@ chmod 755 dromozoa-boot
 * [automake](https://ftp.gnu.org/gnu/automake/)
 * [libtool](https://ftp.gnu.org/gnu/libtool/)
 * [tig](https://github.com/jonas/tig/releases)
+* [zeromq](http://zeromq.org/intro:get-the-software)
