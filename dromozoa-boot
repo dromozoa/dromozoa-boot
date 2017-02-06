@@ -269,7 +269,12 @@ fn_package_luarocks() {
     xtrue) return;;
   esac
   fn_prepare "$package_url"
-  ./configure --prefix="$prefix"
+  if test -x "$prefix/bin/lua"
+  then
+    ./configure --prefix="$prefix" --with-lua="$prefix"
+  else
+    ./configure --prefix="$prefix"
+  fi
   make bootstrap
 }
 
