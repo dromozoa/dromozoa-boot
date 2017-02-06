@@ -76,7 +76,7 @@ fn_package_version_lua52() {
 }
 
 fn_package_version_lua53() {
-  echo 5.3.3
+  echo 5.3.4
 }
 
 fn_package_version_luajit() {
@@ -104,7 +104,7 @@ fn_package_version_tig() {
 }
 
 fn_package_version_zeromq() {
-  echo 4.2.0
+  echo 4.2.1
 }
 
 command=install
