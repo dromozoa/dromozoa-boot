@@ -80,7 +80,7 @@ fn_package_version_lua53() {
 }
 
 fn_package_version_luajit() {
-  echo 2.0.4
+  echo 2.0.5
 }
 
 fn_package_version_luarocks() {
@@ -100,7 +100,7 @@ fn_package_version_libtool() {
 }
 
 fn_package_version_tig() {
-  echo 2.2.1
+  echo 2.2.2
 }
 
 fn_package_version_zeromq() {
