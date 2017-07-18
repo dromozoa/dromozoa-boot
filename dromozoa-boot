@@ -92,7 +92,7 @@ fn_package_version_autoconf() {
 }
 
 fn_package_version_automake() {
-  echo 1.15
+  echo 1.15.1
 }
 
 fn_package_version_libtool() {
