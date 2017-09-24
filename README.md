@@ -1,6 +1,6 @@
 # dromozoa-boot
 
-## synopsis
+## Synopsis
 
 ```bash
 curl -fLO https://github.com/dromozoa/dromozoa-boot/raw/master/dromozoa-boot
@@ -12,7 +12,7 @@ chmod 755 dromozoa-boot
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks
 ```
 
-## packages
+## Packages
 
 * [lua51](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.1%2F)
 * [lua52](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.1%2F)
