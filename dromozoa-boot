@@ -100,7 +100,7 @@ fn_package_version_libtool() {
 }
 
 fn_package_version_tig() {
-  echo 2.2.2
+  echo 2.3.0
 }
 
 fn_package_version_zeromq() {
