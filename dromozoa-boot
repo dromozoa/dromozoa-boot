@@ -210,11 +210,6 @@ case x$LDFLAGS in
   *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
 esac
 export LDFLAGS
-case x$LIBS in
-  x) LIBS="-Wl,-rpath -Wl,$prefix/lib";;
-  *) LIBS="-Wl,-rpath -Wl,$prefix/lib $LIBS";;
-esac
-export LIBS
 
 fn_require() {
   printf "checking version of $1..."
@@ -391,10 +386,15 @@ fn_package_vim() {
       enable_luainterp=--enable_luainterp=no
       with_lua_prefix=--without-lua-prefix;;
     *)
+      lua_prefix=`fn_dirname "$lua"`
+      lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$' '|' "x$lua_prefix" : 'x\(.*\)'`
       enable_luainterp=--enable-luainterp=yes
-      with_lua_prefix=`fn_dirname "$lua"`
-      with_lua_prefix=`expr "x$with_lua_prefix" : 'x\(.*\)/bin$' '|' "x$with_lua_prefix" : 'x\(.*\)'`
-      with_lua_prefix="--with-lua-prefix=$with_lua_prefix";;
+      with_lua_prefix="--with-lua-prefix=$lua_prefix"
+      case x$LIBS in
+        x) LIBS="-Wl,-rpath -Wl,$lua_prefix/lib";;
+        *) LIBS="-Wl,-rpath -Wl,$lua_prefix/lib $LIBS";;
+      esac
+      export LIBS;;
   esac
   case x$lua in
     */luajit) with_luajit=--with-luajit;;
