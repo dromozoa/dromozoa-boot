@@ -9,7 +9,7 @@ chmod 755 dromozoa-boot
 ./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool tig zeromq
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks
-./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks
+./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks vim
 ```
 
 ## Packages
