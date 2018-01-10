@@ -37,19 +37,23 @@ fn_dirname() {
     '|' .
 }
 
-fn_which() {
-  path=:$1
+fn_search() {
+  path=:$PATH
   while :
   do
     i=`expr "x$path" : 'x:\([^:]*\)' '|' "x$path" : 'x\(:\)'`
     case x$i in
       x:) i=.;;
     esac
-    if test -x "$i/$2"
-    then
-      echo "$i/$2"
-      return
-    fi
+    for j in "$@"
+    do
+      if test -x "$i/$j"
+      then
+        i=`(cd "$i" && pwd)`
+        echo "$i/$j"
+        return
+      fi
+    done
     path=`expr "x$path" : 'x:[^:]*\(.*\)' || :`
     case x$path in
       x) return;;
@@ -206,6 +210,11 @@ case x$LDFLAGS in
   *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
 esac
 export LDFLAGS
+case x$LIBS in
+  x) LIBS="-Wl,-rpath -Wl,$prefix/lib";;
+  *) LIBS="-Wl,-rpath -Wl,$prefix/lib $LIBS";;
+esac
+export LIBS
 
 fn_require() {
   printf "checking version of $1..."
@@ -376,23 +385,20 @@ fn_package_vim() {
   esac
   fn_prepare "$package_url" "vim-$package_version"
 
-  with_luajit=--without-luajit
-  lua=`fn_which "$PATH" luajit`
-  case x$lua in
-    x) lua=`fn_which "$PATH" lua`;;
-    *) with_luajit=--with-luajit;;
-  esac
+  lua=`fn_search luajit lua`
   case x$lua in
     x)
-      enable_luainterp=--enable-luainterp=no
-      with_lua_prefix=--without-lua-prefix
-      ;;
+      enable_luainterp=--enable_luainterp=no
+      with_lua_prefix=--without-lua-prefix;;
     *)
-      lua_prefix=`fn_dirname "$lua"`
-      lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$' '|' "x$lua_prefix" : 'x\(.*\)'`
       enable_luainterp=--enable-luainterp=yes
-      with_lua_prefix="--with-lua-prefix=$lua_prefix"
-      ;;
+      with_lua_prefix=`fn_dirname "$lua"`
+      with_lua_prefix=`expr "x$with_lua_prefix" : 'x\(.*\)/bin$' '|' "x$with_lua_prefix" : 'x\(.*\)'`
+      with_lua_prefix="--with-lua-prefix=$with_lua_prefix";;
+  esac
+  case x$lua in
+    */luajit) with_luajit=--with-luajit;;
+    *) with_luajit=--without-luajit;;
   esac
 
   fn_build \
