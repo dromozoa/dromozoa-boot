@@ -104,7 +104,7 @@ fn_package_version_tig() {
 }
 
 fn_package_version_zeromq() {
-  echo 4.2.2
+  echo 4.2.3
 }
 
 command=install
