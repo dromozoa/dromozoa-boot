@@ -2,8 +2,6 @@
 
 ## Synopsis
 
-### Darwin
-
 ```
 curl -fLO https://github.com/dromozoa/dromozoa-boot/raw/master/dromozoa-boot
 chmod 755 dromozoa-boot
