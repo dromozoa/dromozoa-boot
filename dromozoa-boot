@@ -157,7 +157,7 @@ do
       shift; command=help;;
     x-list|x-lis|x-li|x-l|x--list|x--lis|x--li|x--l)
       shift; command=list;;
-    x-k|--insecure)
+    x-k|x--insecure)
       shift; insecure=true;;
     x-prefix|x-prefi|x-pref|x-pre|x-pr|x-p|x--prefix|x--prefi|x--pref|x--pre|x--pr|x--p)
       case x$# in
