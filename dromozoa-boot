@@ -145,6 +145,7 @@ fn_package_version_vim() {
 }
 
 command=install
+insecure=false
 prefix=
 while :
 do
@@ -156,6 +157,8 @@ do
       shift; command=help;;
     x-list|x-lis|x-li|x-l|x--list|x--lis|x--li|x--l)
       shift; command=list;;
+    x-k|--insecure)
+      shift; insecure=true;;
     x-prefix|x-prefi|x-pref|x-pre|x-pr|x-p|x--prefix|x--prefi|x--pref|x--pre|x--pr|x--p)
       case x$# in
         x1) echo "missing argument to $1" >&2; exit 1;;
@@ -177,7 +180,7 @@ case x$command in
     cat <<EOH
 $0 --help
 $0 --list
-$0 --prefix=PREFIX PACKAGE...
+$0 [--insecure] --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   xlist)
@@ -241,7 +244,10 @@ fn_check() {
 
 fn_prepare() {
   echo "fetching $1..."
-  curl -fLO "$1"
+  case x$insecure in
+    xtrue) curl -fkLO "$1";;
+    *) curl -fLO "$1";;
+  esac
   filename=`fn_basename "$1"`
   echo "extracting $filename..."
   case x$filename in
