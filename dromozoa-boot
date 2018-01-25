@@ -209,8 +209,8 @@ case x$CPPFLAGS in
 esac
 export CPPFLAGS
 case x$LDFLAGS in
-  x) LDFLAGS="-L$prefix/lib";;
-  *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
+  x) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib";;
+  *) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib $LDFLAGS";;
 esac
 export LDFLAGS
 
@@ -344,11 +344,8 @@ fn_package_vim() {
       lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$' '|' "x$lua_prefix" : 'x\(.*\)'`
       enable_luainterp=--enable-luainterp=yes
       with_lua_prefix="--with-lua-prefix=$lua_prefix"
-      case x$LIBS in
-        x) LIBS="-Wl,-rpath -Wl,$lua_prefix/lib";;
-        *) LIBS="-Wl,-rpath -Wl,$lua_prefix/lib $LIBS";;
-      esac
-      export LIBS;;
+      LDFLAGS="-Wl,-rpath -Wl,$lua_prefix/lib $LDFLAGS"
+      export LDFLAGS;;
   esac
   case x$lua in
     */luajit) with_luajit=--with-luajit;;
