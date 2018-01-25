@@ -26,3 +26,11 @@ chmod 755 dromozoa-boot
 * [libtool](https://ftp.gnu.org/gnu/libtool/)
 * [tig](https://github.com/jonas/tig/releases)
 * [zeromq](http://zeromq.org/intro:get-the-software)
+
+## Prerequisites
+
+### RHEL and derivatives
+
+```
+sudo yum install -y ncurses-devel
+```
