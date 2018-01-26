@@ -337,15 +337,19 @@ fn_package_vim() {
   lua=`fn_search luajit lua`
   case x$lua in
     x)
-      enable_luainterp=--enable_luainterp=no
+      enable_luainterp=--enable-luainterp=no
       with_lua_prefix=--without-lua-prefix;;
     *)
       lua_prefix=`fn_dirname "$lua"`
       lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$' '|' "x$lua_prefix" : 'x\(.*\)'`
       enable_luainterp=--enable-luainterp=yes
       with_lua_prefix="--with-lua-prefix=$lua_prefix"
+      case x$CFLAGS in
+        x) CFLAGS="-std=gnu99";;
+        *) CFLAGS="-std=gnu99 $CFLAGS";;
+      esac
       LDFLAGS="-Wl,-rpath -Wl,$lua_prefix/lib $LDFLAGS"
-      export LDFLAGS;;
+      export CPPFLAGS LDFLAGS;;
   esac
   case x$lua in
     */luajit) with_luajit=--with-luajit;;
