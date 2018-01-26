@@ -50,4 +50,4 @@ chmod 755 dromozoa-boot
 
 ### Raspbian
 
-* libncurses5-dev
+* libncursesw5-dev
