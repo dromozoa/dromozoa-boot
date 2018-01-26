@@ -202,17 +202,23 @@ case x$PATH in
   x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
   *) PATH=$prefix/bin:$PATH;;
 esac
-export PATH
 case x$CPPFLAGS in
   x) CPPFLAGS="-I$prefix/include";;
   *) CPPFLAGS="-I$prefix/include $CPPFLAGS";;
 esac
-export CPPFLAGS
-case x$LDFLAGS in
-  x) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib";;
-  *) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib $LDFLAGS";;
+case x`uname` in
+  xDarwin)
+    case x$LDFLAGS in
+      x) LDFLAGS="-L$prefix/lib";;
+      *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
+    esac;;
+  *)
+    case x$LDFLAGS in
+      x) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib";;
+      *) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib $LDFLAGS";;
+    esac;;
 esac
-export LDFLAGS
+export PATH CPPFLAGS LDFLAGS
 
 fn_require() {
   printf "checking version of $1..."
@@ -348,8 +354,11 @@ fn_package_vim() {
         x) CFLAGS="-std=gnu99";;
         *) CFLAGS="-std=gnu99 $CFLAGS";;
       esac
-      LDFLAGS="-Wl,-rpath -Wl,$lua_prefix/lib $LDFLAGS"
-      export CPPFLAGS LDFLAGS;;
+      case x`uname` in
+        xDarwin) ;;
+        *) LDFLAGS="-Wl,-rpath -Wl,$lua_prefix/lib $LDFLAGS";;
+      esac
+      export CFLAGS LDFLAGS;;
   esac
   case x$lua in
     */luajit) with_luajit=--with-luajit;;
