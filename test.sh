@@ -32,16 +32,21 @@ fn_dirname() {
     '|' .
 }
 
-check() {
+fn_check() {
   result=`fn_dirname "$1"`
   test "x$result" = "x$2" || echo "error: dirname($1) $result != $2"
   result=`fn_basename "$1"`
   test "x$result" = "x$3" || echo "error: basename($1) $result != $3"
 }
 
-check /usr/lib /usr lib
-check /usr/    /    usr
-check usr      .    usr
-check /        /    /
-check .        .    .
-check ..       .    ..
+fn_check /usr/lib /usr lib
+fn_check /usr/    /    usr
+fn_check usr      .    usr
+fn_check /        /    /
+fn_check .        .    .
+fn_check ..       .    ..
+
+case x`echo foo bar baz` in
+  xfoo*baz) ;;
+  *) echo error;;
+esac

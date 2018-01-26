@@ -63,6 +63,15 @@ fn_search() {
 
 fn_version() {
   case x$1 in
+    xvim)
+      if "$@" >/dev/null 2>&1
+      then
+        result=`"$@" 2>&1 | sed -n -e 1p`
+        version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9.]*\)' || :`
+        result=`"$@" 2>&1 | sed -n -e '/^Included patches:/p'`
+        patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' || :`
+        echo "$version.$patch"
+      fi;;
     xzeromq)
       name=dromozoa-boot-zeromq-version
       cat <<EOH >"$name.c"
@@ -81,15 +90,6 @@ EOH
       if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
       then
         "./$name"
-      fi;;
-    xvim)
-      if "$@" >/dev/null 2>&1
-      then
-        result=`"$@" 2>&1 | sed -n -e 1p`
-        version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9.]*\)' || :`
-        result=`"$@" 2>&1 | sed -n -e '/^Included patches:/p'`
-        patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' || :`
-        echo "$version.$patch"
       fi;;
     *)
       if "$@" >/dev/null 2>&1
@@ -120,6 +120,10 @@ fn_package_version_luarocks() {
   echo 2.4.3
 }
 
+fn_package_version_vim() {
+  echo 8.0.1428
+}
+
 fn_package_version_autoconf() {
   echo 2.69
 }
@@ -138,10 +142,6 @@ fn_package_version_tig() {
 
 fn_package_version_zeromq() {
   echo 4.2.3
-}
-
-fn_package_version_vim() {
-  echo 8.0.1428
 }
 
 command=install
@@ -184,7 +184,7 @@ $0 [--insecure] --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   xlist)
-    for package in lua51 lua52 lua53 luajit luarocks autoconf automake libtool tig zeromq vim
+    for package in lua51 lua52 lua53 luajit luarocks vim autoconf automake libtool tig zeromq
     do
       package_version=`"fn_package_version_$package"`
       echo "$package $package_version"
@@ -202,17 +202,23 @@ case x$PATH in
   x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
   *) PATH=$prefix/bin:$PATH;;
 esac
-export PATH
 case x$CPPFLAGS in
   x) CPPFLAGS="-I$prefix/include";;
   *) CPPFLAGS="-I$prefix/include $CPPFLAGS";;
 esac
-export CPPFLAGS
-case x$LDFLAGS in
-  x) LDFLAGS="-L$prefix/lib";;
-  *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
+case x`uname` in
+  xDarwin)
+    case x$LDFLAGS in
+      x) LDFLAGS="-L$prefix/lib";;
+      *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
+    esac;;
+  *)
+    case x$LDFLAGS in
+      x) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib";;
+      *) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib $LDFLAGS";;
+    esac;;
 esac
-export LDFLAGS
+export PATH CPPFLAGS LDFLAGS
 
 fn_require() {
   printf "checking version of $1..."
@@ -324,6 +330,51 @@ fn_package_luarocks() {
   make bootstrap
 }
 
+fn_package_vim() {
+  package=$1
+  package_version=$2
+  package_url=https://github.com/vim/vim/archive/v$package_version.tar.gz
+  fn_check "$package_version" vim --version
+  case x$check in
+    xtrue) return;;
+  esac
+  fn_prepare "$package_url" "vim-$package_version"
+
+  lua=`fn_search luajit lua`
+  case x$lua in
+    x)
+      enable_luainterp=--enable-luainterp=no
+      with_lua_prefix=--without-lua-prefix;;
+    *)
+      lua_prefix=`fn_dirname "$lua"`
+      lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$' '|' "x$lua_prefix" : 'x\(.*\)'`
+      enable_luainterp=--enable-luainterp=yes
+      with_lua_prefix="--with-lua-prefix=$lua_prefix"
+      case x$CFLAGS in
+        x) CFLAGS="-std=gnu99";;
+        *) CFLAGS="-std=gnu99 $CFLAGS";;
+      esac
+      case x`uname` in
+        xDarwin) ;;
+        *) LDFLAGS="-Wl,-rpath -Wl,$lua_prefix/lib $LDFLAGS";;
+      esac
+      export CFLAGS LDFLAGS;;
+  esac
+  case x$lua in
+    */luajit) with_luajit=--with-luajit;;
+    *) with_luajit=--without-luajit;;
+  esac
+
+  fn_build \
+      "$enable_luainterp" \
+      --enable-multibyte \
+      --enable-gui=no \
+      --with-features=huge \
+      "$with_lua_prefix" \
+      "$with_luajit" \
+      --enable-fail-if-missing
+}
+
 fn_package_gnu() {
   package=$1
   package_version=$2
@@ -374,47 +425,6 @@ fn_package_zeromq() {
   esac
   fn_prepare "$package_url"
   fn_build
-}
-
-fn_package_vim() {
-  package=$1
-  package_version=$2
-  package_url=https://github.com/vim/vim/archive/v$package_version.tar.gz
-  fn_check "$package_version" vim --version
-  case x$check in
-    xtrue) return;;
-  esac
-  fn_prepare "$package_url" "vim-$package_version"
-
-  lua=`fn_search luajit lua`
-  case x$lua in
-    x)
-      enable_luainterp=--enable_luainterp=no
-      with_lua_prefix=--without-lua-prefix;;
-    *)
-      lua_prefix=`fn_dirname "$lua"`
-      lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$' '|' "x$lua_prefix" : 'x\(.*\)'`
-      enable_luainterp=--enable-luainterp=yes
-      with_lua_prefix="--with-lua-prefix=$lua_prefix"
-      case x$LIBS in
-        x) LIBS="-Wl,-rpath -Wl,$lua_prefix/lib";;
-        *) LIBS="-Wl,-rpath -Wl,$lua_prefix/lib $LIBS";;
-      esac
-      export LIBS;;
-  esac
-  case x$lua in
-    */luajit) with_luajit=--with-luajit;;
-    *) with_luajit=--without-luajit;;
-  esac
-
-  fn_build \
-      "$enable_luainterp" \
-      --enable-multibyte \
-      --enable-gui=no \
-      --with-features=huge \
-      "$with_lua_prefix" \
-      "$with_luajit" \
-      --enable-fail-if-missing
 }
 
 case x$TMPDIR in
