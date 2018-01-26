@@ -43,6 +43,11 @@ chmod 755 dromozoa-boot
 
 ### RHEL and derivatives
 
-```
-sudo yum install -y ncurses-devel
-```
+* m4
+* ncurses-devel
+* perl-Data-Dumper
+* perl-Thread-Queue
+
+### Raspbian
+
+* libncurses5-dev
