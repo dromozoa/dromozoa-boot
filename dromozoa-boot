@@ -121,7 +121,7 @@ fn_package_version_luarocks() {
 }
 
 fn_package_version_vim() {
-  echo 8.0.1428
+  echo 8.0.1438
 }
 
 fn_package_version_autoconf() {
