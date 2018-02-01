@@ -41,9 +41,9 @@ fn_search() {
   path=:$PATH
   while :
   do
-    i=`expr "x$path" : 'x:\([^:]*\)' '|' "x$path" : 'x\(:\)'`
+    i=`expr "x$path" : 'x:\([^:]*\)' || :`
     case x$i in
-      x:) i=.;;
+      x) i=.;;
     esac
     for j in "$@"
     do
