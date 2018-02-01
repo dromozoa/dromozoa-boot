@@ -50,3 +50,39 @@ case x`echo foo bar baz` in
   xfoo*baz) ;;
   *) echo error;;
 esac
+
+fn_search() {
+  path=:$PATH
+  while :
+  do
+    i=`expr "x$path" : 'x:\([^:]*\)' || :`
+    case x$i in
+      x) i=.;;
+    esac
+    echo "[$i]"
+    for j in "$@"
+    do
+      if test -x "$i/$j"
+      then
+        i=`(cd "$i" && pwd)`
+        echo "$i/$j"
+        return
+      fi
+    done
+    path=`expr "x$path" : 'x:[^:]*\(.*\)' || :`
+    case x$path in
+      x) return;;
+    esac
+  done
+}
+
+path_save=$PATH
+PATH=$PATH::.
+export PATH
+
+fn_search lua
+fn_search vim
+fn_search no-such-command
+
+PATH=$path_save
+export PATH
