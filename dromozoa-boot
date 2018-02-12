@@ -63,6 +63,12 @@ fn_search() {
 
 fn_version() {
   case x$1 in
+    xscreen)
+      result=`"$@" 2>&1 || :`
+      major=`expr "x$result" : 'x.* version \([0-9][0-9]*\)' || :`
+      minor=`expr "x$result" : 'x.* version [0-9][0-9]*\.\([0-9][0-9]*\)' || :`
+      patch=`expr "x$result" : 'x.* version [0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)' || :`
+      printf '%d.%d.%d' "$major" "$minor" "$patch";;
     xvim)
       if "$@" >/dev/null 2>&1
       then
@@ -121,7 +127,7 @@ fn_package_version_luarocks() {
 }
 
 fn_package_version_vim() {
-  echo 8.0.1473
+  echo 8.0.1509
 }
 
 fn_package_version_autoconf() {
@@ -134,6 +140,10 @@ fn_package_version_automake() {
 
 fn_package_version_libtool() {
   echo 2.4.6
+}
+
+fn_package_version_screen() {
+  echo 4.6.2
 }
 
 fn_package_version_tig() {
@@ -184,7 +194,7 @@ $0 [--insecure] --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   xlist)
-    for package in lua51 lua52 lua53 luajit luarocks vim autoconf automake libtool tig zeromq
+    for package in lua51 lua52 lua53 luajit luarocks vim autoconf automake libtool screen tig zeromq
     do
       package_version=`"fn_package_version_$package"`
       echo "$package $package_version"
@@ -272,6 +282,20 @@ fn_build() {
   ./configure --prefix="$prefix" "$@"
   make
   make install
+}
+
+fn_package_gnu() {
+  package=$1
+  shift
+  package_version=$1
+  shift
+  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
+  fn_check "$package_version" "$package" --version
+  case x$check in
+    xtrue) return;;
+  esac
+  fn_prepare "$package_url"
+  fn_build "$@"
 }
 
 fn_package_lua() {
@@ -375,18 +399,6 @@ fn_package_vim() {
       --enable-fail-if-missing
 }
 
-fn_package_gnu() {
-  package=$1
-  package_version=$2
-  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
-  fn_check "$package_version" "$package" --version
-  case x$check in
-    xtrue) return;;
-  esac
-  fn_prepare "$package_url"
-  fn_build
-}
-
 fn_package_autoconf() {
   fn_require m4 --version
   fn_require perl --version
@@ -400,6 +412,10 @@ fn_package_automake() {
 
 fn_package_libtool() {
   fn_package_gnu "$@"
+}
+
+fn_package_screen() {
+  fn_package_gnu "$@" --enable-colors256
 }
 
 fn_package_tig() {
