@@ -11,14 +11,14 @@ chmod 755 dromozoa-boot
 ```
 (cd /opt && sudo mkdir -p dromozoa dromozoa51 dromozoa52 dromozoa53)
 (cd /opt && sudo chown `id -u`:`id -g` dromozoa dromozoa51 dromozoa52 dromozoa53)
-./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool tig zeromq
+./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool screen tig zeromq
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks vim
 ```
 
 ```
-./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" autoconf automake libtool tig zeromq
+./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" autoconf automake libtool screen tig zeromq
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa51" lua51 luajit luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa52" lua52 luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa53" lua53 luarocks vim
@@ -36,6 +36,7 @@ chmod 755 dromozoa-boot
 * [autoconf](https://ftp.gnu.org/gnu/autoconf/)
 * [automake](https://ftp.gnu.org/gnu/automake/)
 * [libtool](https://ftp.gnu.org/gnu/libtool/)
+* [screen](https://ftp.gnu.org/gnu/screen/)
 * [tig](https://github.com/jonas/tig/releases)
 * [zeromq](http://zeromq.org/intro:get-the-software)
 
