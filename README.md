@@ -48,6 +48,7 @@ chmod 755 dromozoa-boot
 * ncurses-devel
 * perl-Data-Dumper
 * perl-Thread-Queue
+* texinfo
 
 ### Raspbian
 
