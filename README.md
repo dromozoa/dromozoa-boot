@@ -2,11 +2,15 @@
 
 ## Synopsis
 
+### fetch
+
 ```
 curl -fLO https://github.com/dromozoa/dromozoa-boot/raw/master/dromozoa-boot
 chmod 755 dromozoa-boot
 ./dromozoa-boot --list
 ```
+
+### install to /opt
 
 ```
 (cd /opt && sudo mkdir -p dromozoa dromozoa51 dromozoa52 dromozoa53)
@@ -16,6 +20,8 @@ chmod 755 dromozoa-boot
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks vim
 ```
+
+### install to $HOME/prefixes
 
 ```
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" autoconf automake libtool screen tig zeromq

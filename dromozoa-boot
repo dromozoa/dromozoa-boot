@@ -22,14 +22,14 @@ then
   unset CDPATH
 fi
 
-fn_basename() {
+dromozoa_basename() {
   expr "x$1" : 'x.*/\([^/][^/]*\)/*$' \
     '|' "x$1" : 'x\(//\)$' \
     '|' "x$1" : 'x\(/\)' \
     '|' "x$1" : 'x\(.*\)'
 }
 
-fn_dirname() {
+dromozoa_dirname() {
   expr "x$1" : 'x\(.*[^/]\)//*[^/][^/]*/*$' \
     '|' "x$1" : 'x\(//\)[^/]' \
     '|' "x$1" : 'x\(//\)$' \
@@ -37,7 +37,7 @@ fn_dirname() {
     '|' .
 }
 
-fn_search() {
+dromozoa_search() {
   path=:$PATH
   while :
   do
@@ -61,7 +61,7 @@ fn_search() {
   done
 }
 
-fn_version() {
+dromozoa_version() {
   case x$1 in
     xscreen)
       result=`"$@" 2>&1 || :`
@@ -106,51 +106,51 @@ EOH
   esac
 }
 
-fn_package_version_lua51() {
+dromozoa_package_version_lua51() {
   echo 5.1.5
 }
 
-fn_package_version_lua52() {
+dromozoa_package_version_lua52() {
   echo 5.2.4
 }
 
-fn_package_version_lua53() {
+dromozoa_package_version_lua53() {
   echo 5.3.4
 }
 
-fn_package_version_luajit() {
+dromozoa_package_version_luajit() {
   echo 2.0.5
 }
 
-fn_package_version_luarocks() {
+dromozoa_package_version_luarocks() {
   echo 2.4.3
 }
 
-fn_package_version_vim() {
-  echo 8.0.1529
+dromozoa_package_version_vim() {
+  echo 8.0.1553
 }
 
-fn_package_version_autoconf() {
+dromozoa_package_version_autoconf() {
   echo 2.69
 }
 
-fn_package_version_automake() {
-  echo 1.15.1
+dromozoa_package_version_automake() {
+  echo 1.16
 }
 
-fn_package_version_libtool() {
+dromozoa_package_version_libtool() {
   echo 2.4.6
 }
 
-fn_package_version_screen() {
+dromozoa_package_version_screen() {
   echo 4.6.2
 }
 
-fn_package_version_tig() {
+dromozoa_package_version_tig() {
   echo 2.3.3
 }
 
-fn_package_version_zeromq() {
+dromozoa_package_version_zeromq() {
   echo 4.2.3
 }
 
@@ -196,7 +196,7 @@ EOH
   xlist)
     for package in lua51 lua52 lua53 luajit luarocks vim autoconf automake libtool screen tig zeromq
     do
-      package_version=`"fn_package_version_$package"`
+      package_version=`"dromozoa_package_version_$package"`
       echo "$package $package_version"
     done
     exit;;
@@ -230,9 +230,9 @@ case x`uname` in
 esac
 export PATH CPPFLAGS LDFLAGS
 
-fn_require() {
+dromozoa_require() {
   printf "checking version of $1..."
-  current_version=`fn_version "$@"`
+  current_version=`dromozoa_version "$@"`
   case x$current_version in
     x) echo " not found, error"; exit 1;;
   esac
@@ -240,11 +240,11 @@ fn_require() {
 }
 
 check=false
-fn_check() {
+dromozoa_check() {
   package_version=$1
   shift
   printf "checking version of $1..."
-  current_version=`fn_version "$@"`
+  current_version=`dromozoa_version "$@"`
   case x$current_version in
     x) current_version="not found";;
   esac
@@ -258,13 +258,13 @@ fn_check() {
   esac
 }
 
-fn_prepare() {
+dromozoa_prepare() {
   echo "fetching $1..."
   case x$insecure in
     xtrue) curl -fkLO "$1";;
     *) curl -fLO "$1";;
   esac
-  filename=`fn_basename "$1"`
+  filename=`dromozoa_basename "$1"`
   echo "extracting $filename..."
   case x$filename in
     x*.tar.gz) gunzip -cd "$filename" | tar xf -;;
@@ -278,73 +278,73 @@ fn_prepare() {
   pwd
 }
 
-fn_build() {
+dromozoa_build() {
   ./configure --prefix="$prefix" "$@"
   make
   make install
 }
 
-fn_package_gnu() {
+dromozoa_package_gnu() {
   package=$1
   shift
   package_version=$1
   shift
   package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
-  fn_check "$package_version" "$package" --version
+  dromozoa_check "$package_version" "$package" --version
   case x$check in
     xtrue) return;;
   esac
-  fn_prepare "$package_url"
-  fn_build "$@"
+  dromozoa_prepare "$package_url"
+  dromozoa_build "$@"
 }
 
-fn_package_lua() {
+dromozoa_package_lua() {
   autotoolize_version=1.2
   package=$1
   package_version=$2
   package_url="https://dromozoa.s3.amazonaws.com/pub/dromozoa-autotoolize/$autotoolize_version/lua-$package_version.dromozoa-autotoolize-$autotoolize_version.tar.gz"
-  fn_check "$package_version" lua -v
+  dromozoa_check "$package_version" lua -v
   case x$check in
     xtrue) return;;
   esac
-  fn_prepare "$package_url"
-  fn_build
+  dromozoa_prepare "$package_url"
+  dromozoa_build
 }
 
-fn_package_lua51() {
-  fn_package_lua "$@"
+dromozoa_package_lua51() {
+  dromozoa_package_lua "$@"
 }
 
-fn_package_lua52() {
-  fn_package_lua "$@"
+dromozoa_package_lua52() {
+  dromozoa_package_lua "$@"
 }
 
-fn_package_lua53() {
-  fn_package_lua "$@"
+dromozoa_package_lua53() {
+  dromozoa_package_lua "$@"
 }
 
-fn_package_luajit() {
+dromozoa_package_luajit() {
   package=$1
   package_version=$2
   package_url="https://luajit.org/download/LuaJIT-$package_version.tar.gz"
-  fn_check "$package_version" luajit -v
+  dromozoa_check "$package_version" luajit -v
   case x$check in
     xtrue) return;;
   esac
-  fn_prepare "$package_url"
+  dromozoa_prepare "$package_url"
   make PREFIX="$prefix"
   make PREFIX="$prefix" install
 }
 
-fn_package_luarocks() {
+dromozoa_package_luarocks() {
   package=$1
   package_version=$2
   package_url=https://luarocks.github.io/luarocks/releases/luarocks-$package_version.tar.gz
-  fn_check "$package_version" luarocks --version
+  dromozoa_check "$package_version" luarocks --version
   case x$check in
     xtrue) return;;
   esac
-  fn_prepare "$package_url"
+  dromozoa_prepare "$package_url"
   if test -x "$prefix/bin/lua"
   then
     ./configure --prefix="$prefix" --with-lua="$prefix"
@@ -354,23 +354,23 @@ fn_package_luarocks() {
   make bootstrap
 }
 
-fn_package_vim() {
+dromozoa_package_vim() {
   package=$1
   package_version=$2
   package_url=https://github.com/vim/vim/archive/v$package_version.tar.gz
-  fn_check "$package_version" vim --version
+  dromozoa_check "$package_version" vim --version
   case x$check in
     xtrue) return;;
   esac
-  fn_prepare "$package_url" "vim-$package_version"
+  dromozoa_prepare "$package_url" "vim-$package_version"
 
-  lua=`fn_search luajit lua`
+  lua=`dromozoa_search luajit lua`
   case x$lua in
     x)
       enable_luainterp=--enable-luainterp=no
       with_lua_prefix=--without-lua-prefix;;
     *)
-      lua_prefix=`fn_dirname "$lua"`
+      lua_prefix=`dromozoa_dirname "$lua"`
       lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$' '|' "x$lua_prefix" : 'x\(.*\)'`
       enable_luainterp=--enable-luainterp=yes
       with_lua_prefix="--with-lua-prefix=$lua_prefix"
@@ -389,7 +389,7 @@ fn_package_vim() {
     *) with_luajit=--without-luajit;;
   esac
 
-  fn_build \
+  dromozoa_build \
       "$enable_luainterp" \
       --enable-multibyte \
       --enable-gui=no \
@@ -399,48 +399,48 @@ fn_package_vim() {
       --enable-fail-if-missing
 }
 
-fn_package_autoconf() {
-  fn_require m4 --version
-  fn_require perl --version
-  fn_package_gnu "$@"
+dromozoa_package_autoconf() {
+  dromozoa_require m4 --version
+  dromozoa_require perl --version
+  dromozoa_package_gnu "$@"
 }
 
-fn_package_automake() {
-  fn_require perl --version
-  fn_package_gnu "$@"
+dromozoa_package_automake() {
+  dromozoa_require perl --version
+  dromozoa_package_gnu "$@"
 }
 
-fn_package_libtool() {
-  fn_package_gnu "$@"
+dromozoa_package_libtool() {
+  dromozoa_package_gnu "$@"
 }
 
-fn_package_screen() {
-  fn_package_gnu "$@" --enable-colors256
+dromozoa_package_screen() {
+  dromozoa_package_gnu "$@" --enable-colors256
 }
 
-fn_package_tig() {
-  fn_require git --version
+dromozoa_package_tig() {
+  dromozoa_require git --version
   package=$1
   package_version=$2
   package_url=https://github.com/jonas/tig/releases/download/tig-$package_version/tig-$package_version.tar.gz
-  fn_check "$package_version" tig --version
+  dromozoa_check "$package_version" tig --version
   case x$check in
     xtrue) return;;
   esac
-  fn_prepare "$package_url"
-  fn_build
+  dromozoa_prepare "$package_url"
+  dromozoa_build
 }
 
-fn_package_zeromq() {
+dromozoa_package_zeromq() {
   package=$1
   package_version=$2
   package_url=https://github.com/zeromq/libzmq/releases/download/v$package_version/zeromq-$package_version.tar.gz
-  fn_check "$package_version" zeromq
+  dromozoa_check "$package_version" zeromq
   case x$check in
     xtrue) return;;
   esac
-  fn_prepare "$package_url"
-  fn_build
+  dromozoa_prepare "$package_url"
+  dromozoa_build
 }
 
 case x$TMPDIR in
@@ -457,6 +457,6 @@ trap "(cd / && rm -fr '$tmp')" 0
 for package in "$@"
 do
   cd "$tmp"
-  package_version=`"fn_package_version_$package"`
-  "fn_package_$package" "$package" "$package_version"
+  package_version=`"dromozoa_package_version_$package"`
+  "dromozoa_package_$package" "$package" "$package_version"
 done
