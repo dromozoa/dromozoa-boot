@@ -258,12 +258,16 @@ dromozoa_check() {
   esac
 }
 
-dromozoa_prepare() {
+dromozoa_curl() {
   echo "fetching $1..."
   case x$insecure in
     xtrue) curl -fkLO "$1";;
     *) curl -fLO "$1";;
   esac
+}
+
+dromozoa_prepare() {
+  dromozoa_curl "$1"
   filename=`dromozoa_basename "$1"`
   echo "extracting $filename..."
   case x$filename in
@@ -286,16 +290,14 @@ dromozoa_build() {
 
 dromozoa_package_gnu() {
   package=$1
-  shift
-  package_version=$1
-  shift
+  package_version=$2
   package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
   dromozoa_check "$package_version" "$package" --version
   case x$check in
     xtrue) return;;
   esac
   dromozoa_prepare "$package_url"
-  dromozoa_build "$@"
+  dromozoa_build
 }
 
 dromozoa_package_lua() {
@@ -415,7 +417,19 @@ dromozoa_package_libtool() {
 }
 
 dromozoa_package_screen() {
-  dromozoa_package_gnu "$@" --enable-colors256
+  package=$1
+  package_version=$2
+  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
+  patch_url=https://github.com/dromozoa/dromozoa-boot/raw/master/$package-$package_version.patch
+  dromozoa_check "$package_version" screen --version
+  case x$check in
+    xtrue) return;;
+  esac
+  dromozoa_curl "$patch_url"
+  patch_filename=`dromozoa_basename "$patch_url"`
+  dromozoa_prepare "$package_url"
+  patch -p1 <"../$patch_filename"
+  dromozoa_build --enable-colors256
 }
 
 dromozoa_package_tig() {
