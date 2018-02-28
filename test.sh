@@ -17,14 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with dromozoa-boot.  If not, see <http://www.gnu.org/licenses/>.
 
-fn_basename() {
+dromozoa_basename() {
   expr "x$1" : 'x.*/\([^/][^/]*\)/*$' \
     '|' "x$1" : 'x\(//\)$' \
     '|' "x$1" : 'x\(/\)' \
     '|' "x$1" : 'x\(.*\)'
 }
 
-fn_dirname() {
+dromozoa_dirname() {
   expr "x$1" : 'x\(.*[^/]\)//*[^/][^/]*/*$' \
     '|' "x$1" : 'x\(//\)[^/]' \
     '|' "x$1" : 'x\(//\)$' \
@@ -32,26 +32,26 @@ fn_dirname() {
     '|' .
 }
 
-fn_check() {
-  result=`fn_dirname "$1"`
+dromozoa_check() {
+  result=`dromozoa_dirname "$1"`
   test "x$result" = "x$2" || echo "error: dirname($1) $result != $2"
-  result=`fn_basename "$1"`
+  result=`dromozoa_basename "$1"`
   test "x$result" = "x$3" || echo "error: basename($1) $result != $3"
 }
 
-fn_check /usr/lib /usr lib
-fn_check /usr/    /    usr
-fn_check usr      .    usr
-fn_check /        /    /
-fn_check .        .    .
-fn_check ..       .    ..
+dromozoa_check /usr/lib /usr lib
+dromozoa_check /usr/    /    usr
+dromozoa_check usr      .    usr
+dromozoa_check /        /    /
+dromozoa_check .        .    .
+dromozoa_check ..       .    ..
 
 case x`echo foo bar baz` in
   xfoo*baz) ;;
   *) echo error;;
 esac
 
-fn_search() {
+dromozoa_search() {
   path=:$PATH
   while :
   do
@@ -80,9 +80,9 @@ path_save=$PATH
 PATH=$PATH::.
 export PATH
 
-fn_search lua
-fn_search vim
-fn_search no-such-command
+dromozoa_search lua
+dromozoa_search vim
+dromozoa_search no-such-command
 
 PATH=$path_save
 export PATH
