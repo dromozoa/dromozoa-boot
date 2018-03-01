@@ -10,7 +10,7 @@ chmod 755 dromozoa-boot
 ./dromozoa-boot --list
 ```
 
-### install to /opt
+### install to /opt/dromozoa
 
 ```
 (cd /opt && sudo mkdir -p dromozoa dromozoa51 dromozoa52 dromozoa53)
@@ -21,7 +21,7 @@ chmod 755 dromozoa-boot
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks vim
 ```
 
-### install to $HOME/prefixes
+### install to $HOME/prefixes/dromozoa
 
 ```
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" autoconf automake libtool screen tig zeromq
@@ -46,16 +46,50 @@ chmod 755 dromozoa-boot
 * [tig](https://github.com/jonas/tig/releases)
 * [zeromq](http://zeromq.org/intro:get-the-software)
 
-## Prerequisites
+## Prerequisites: RHEL 6 and derivatives
 
-### RHEL and derivatives
+```
+sudo yum install gcc gcc-c++ patch zip unzip ncurses-devel readline-devel
+```
 
-* m4
-* ncurses-devel
-* perl-Data-Dumper
-* perl-Thread-Queue
-* texinfo
+### automake
 
-### Raspbian
+```
+sudo yum install perl-devel
+curl -fL https://cpanmin.us/ >cpanm
+chmod 755 cpanm
+sudo ./cpanm List::Util
+```
 
-* libncursesw5-dev
+## Prerequisites: RHEL 7 and derivatives
+
+```
+sudo yum install gcc gcc-c++ patch zip unzip ncurses-devel readline-devel
+```
+
+### autoconf
+
+```
+sudo yum install perl-Data-Dumper
+```
+
+### automake
+
+```
+sudo yum install perl-devel perl-Thread-Queue
+curl -fL https://cpanmin.us/ >cpanm
+chmod 755 cpanm
+sudo ./cpanm List::Util
+```
+
+## Prerequisites: Raspbian Stretch Lite
+
+```
+sudo apt-get install libncursesw5-dev libreadline-dev
+```
+
+### autoconf
+
+```
+sudo apt-get install m4
+```
