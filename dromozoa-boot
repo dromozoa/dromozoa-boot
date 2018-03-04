@@ -176,7 +176,6 @@ dromozoa_package_version_zeromq() {
 
 command=install
 insecure=false
-no_check=false
 prefix=
 while :
 do
@@ -190,8 +189,6 @@ do
       shift; command=list;;
     x-k|x--insecure)
       shift; insecure=true;;
-    x--no-check)
-      shift; no_check=true;;
     x-prefix|x-prefi|x-pref|x-pre|x-pr|x-p|x--prefix|x--prefi|x--pref|x--pre|x--pr|x--p)
       case x$# in
         x1) echo "missing argument to $1" >&2; exit 1;;
@@ -213,7 +210,7 @@ case x$command in
     cat <<EOH
 $0 --help
 $0 --list
-$0 [--insecure] [--no-check] --prefix=PREFIX PACKAGE...
+$0 [--insecure] --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   xlist)
@@ -266,23 +263,18 @@ check=false
 dromozoa_check() {
   package_version=$1
   shift
-  case x$no_check in
-    xtrue)
-      check=false;;
+  printf "checking version of $1..."
+  current_version=`dromozoa_version "$@"`
+  case x$current_version in
+    x) current_version="not found";;
+  esac
+  case x$current_version in
+    x$package_version)
+      echo " $current_version, skip"
+      check=true;;
     *)
-      printf "checking version of $1..."
-      current_version=`dromozoa_version "$@"`
-      case x$current_version in
-        x) current_version="not found";;
-      esac
-      case x$current_version in
-        x$package_version)
-          echo " $current_version, skip"
-          check=true;;
-        *)
-          echo " $current_version, install"
-          check=false;;
-      esac;;
+      echo " $current_version, install"
+      check=false;;
   esac
 }
 
