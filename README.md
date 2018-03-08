@@ -82,6 +82,27 @@ chmod 755 cpanm
 sudo ./cpanm List::Util
 ```
 
+## Prerequisites: Amazon Linux 2
+
+```
+sudo yum install gcc gcc-c++ patch ncurses-devel readline-devel
+```
+
+### autoconf
+
+```
+sudo yum install m4 perl-Data-Dumper
+```
+
+### automake
+
+```
+sudo yum install perl-devel perl-Thread-Queue
+curl -fL https://cpanmin.us/ >cpanm
+chmod 755 cpanm
+sudo ./cpanm List::Util
+```
+
 ## Prerequisites: Raspbian Stretch Lite
 
 ```
