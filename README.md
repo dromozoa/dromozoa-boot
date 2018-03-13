@@ -52,15 +52,6 @@ chmod 755 dromozoa-boot
 sudo yum install gcc gcc-c++ patch zip unzip ncurses-devel readline-devel
 ```
 
-### automake
-
-```
-sudo yum install perl-devel
-curl -fL https://cpanmin.us/ >cpanm
-chmod 755 cpanm
-sudo ./cpanm List::Util
-```
-
 ## Prerequisites: RHEL 7 and derivatives
 
 ```
@@ -76,10 +67,7 @@ sudo yum install perl-Data-Dumper
 ### automake
 
 ```
-sudo yum install perl-devel perl-Thread-Queue
-curl -fL https://cpanmin.us/ >cpanm
-chmod 755 cpanm
-sudo ./cpanm List::Util
+sudo yum install perl-Thread-Queue
 ```
 
 ## Prerequisites: Amazon Linux 2
@@ -97,10 +85,7 @@ sudo yum install m4 perl-Data-Dumper
 ### automake
 
 ```
-sudo yum install perl-devel perl-Thread-Queue
-curl -fL https://cpanmin.us/ >cpanm
-chmod 755 cpanm
-sudo ./cpanm List::Util
+sudo yum install perl-Thread-Queue
 ```
 
 ## Prerequisites: Raspbian Stretch Lite
