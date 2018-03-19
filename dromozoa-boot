@@ -242,12 +242,12 @@ EOH
     result=`"./$name" 0 <"$name.out"`
     version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9][0-9.]*\)' '|' x`
     case x$version in
-      x) ;;
+      xx) ;;
       *)
         result=`"./$name" p <"$name.out"`
         patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' '|' x`
         case x$patch in
-          x) echo "$version";;
+          xx) echo "$version";;
           *) echo "$version.$patch";;
         esac;;
     esac
@@ -283,7 +283,7 @@ dromozoa_version() {
       result=`"$@" 2>&1 || :`
       result=`expr "x$result" : 'x.* version \([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)' '|' x`
       case x$result in
-        x) ;;
+        xx) ;;
         *)
           major=`expr "x$result" : 'x\([0-9][0-9]*\)'`
           minor=`expr "x$result" : 'x[0-9][0-9]*\.\([0-9][0-9]*\)'`
