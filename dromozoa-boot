@@ -41,10 +41,7 @@ dromozoa_search() {
   path=:$PATH
   while :
   do
-    i=`expr "x$path" : 'x:\([^:]*\)' || :`
-    case x$i in
-      x) i=.;;
-    esac
+    i=`expr "x$path" : 'x:\([^:]*\)' '|' .`
     for j in "$@"
     do
       if test -x "$i/$j"
@@ -54,10 +51,11 @@ dromozoa_search() {
         return
       fi
     done
-    path=`expr "x$path" : 'x:[^:]*\(.*\)' || :`
-    case x$path in
-      x) return;;
-    esac
+    if expr "x$path" : 'x:[^:]*$' >/dev/null 2>&1
+    then
+      return
+    fi
+    path=`expr "x$path" : 'x:[^:]*\(.*\)'`
   done
 }
 
