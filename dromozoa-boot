@@ -41,10 +41,7 @@ dromozoa_search() {
   path=:$PATH
   while :
   do
-    i=`expr "x$path" : 'x:\([^:]*\)' || :`
-    case x$i in
-      x) i=.;;
-    esac
+    i=`expr "x$path" : 'x:\([^:]*\)' '|' .`
     for j in "$@"
     do
       if test -x "$i/$j"
@@ -54,76 +51,12 @@ dromozoa_search() {
         return
       fi
     done
-    path=`expr "x$path" : 'x:[^:]*\(.*\)' || :`
-    case x$path in
-      x) return;;
-    esac
+    if expr "x$path" : 'x:[^:]*$' >/dev/null 2>&1
+    then
+      return
+    fi
+    path=`expr "x$path" : 'x:[^:]*\(.*\)'`
   done
-}
-
-dromozoa_version() {
-  case x$1 in
-    xlua)
-      name=dromozoa-boot-lua-version
-      cat <<EOH >"$name.c"
-#include <stdio.h>
-#include <lua.h>
-
-int main(int ac, char* av[]) {
-  const char* p = LUA_RELEASE;
-  if (*p++ != 'L') { return 1; }
-  if (*p++ != 'u') { return 1; }
-  if (*p++ != 'a') { return 1; }
-  if (*p++ != ' ') { return 1; }
-  printf("%s\n", p);
-  return 0;
-}
-EOH
-      if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -llua -o "$name" >/dev/null 2>&1
-      then
-        "./$name"
-      fi;;
-    xscreen)
-      result=`"$@" 2>&1 || :`
-      major=`expr "x$result" : 'x.* version \([0-9][0-9]*\)' || :`
-      minor=`expr "x$result" : 'x.* version [0-9][0-9]*\.\([0-9][0-9]*\)' || :`
-      patch=`expr "x$result" : 'x.* version [0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)' || :`
-      printf '%d.%d.%d' "$major" "$minor" "$patch";;
-    xvim)
-      if "$@" >/dev/null 2>&1
-      then
-        result=`"$@" 2>&1 | sed -n -e 1p`
-        version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9.]*\)' || :`
-        result=`"$@" 2>&1 | sed -n -e '/^Included patches:/p'`
-        patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' || :`
-        echo "$version.$patch"
-      fi;;
-    xzeromq)
-      name=dromozoa-boot-zeromq-version
-      cat <<EOH >"$name.c"
-#include <stdio.h>
-#include <zmq.h>
-
-int main(int ac, char* av[]) {
-  int major = 0;
-  int minor = 0;
-  int patch = 0;
-  zmq_version(&major, &minor, &patch);
-  printf("%d.%d.%d\n", major, minor, patch);
-  return 0;
-}
-EOH
-      if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
-      then
-        "./$name"
-      fi;;
-    *)
-      if "$@" >/dev/null 2>&1
-      then
-        result=`"$@" 2>&1`
-        expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' || :
-      fi;;
-  esac
 }
 
 dromozoa_package_version_lua51() {
@@ -147,7 +80,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 8.0.1605
+  echo 8.0.1616
 }
 
 dromozoa_package_version_autoconf() {
@@ -228,6 +161,7 @@ esac
 mkdir -p "$prefix"
 prefix=`(cd "$prefix" && pwd)`
 
+LANG=C
 case x$PATH in
   x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
   *) PATH=$prefix/bin:$PATH;;
@@ -248,7 +182,127 @@ case x`uname` in
       *) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib $LDFLAGS";;
     esac;;
 esac
-export PATH CPPFLAGS LDFLAGS
+export LANG PATH CPPFLAGS LDFLAGS
+
+dromozoa_version_lua() {
+  name=_dromozoa_version_lua
+  cat <<EOH >"$name.c"
+#include <stdio.h>
+#include <lua.h>
+
+int main(int ac, char* av[]) {
+  const char* p = LUA_RELEASE;
+  if (*p++ != 'L') { return 1; }
+  if (*p++ != 'u') { return 1; }
+  if (*p++ != 'a') { return 1; }
+  if (*p++ != ' ') { return 1; }
+  printf("%s\n", p);
+  return 0;
+}
+EOH
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -llua -o "$name" >/dev/null 2>&1
+  then
+    "./$name"
+  fi
+}
+
+dromozoa_version_vim() {
+  name=_dromozoa_version_vim
+  cat <<EOH >"$name.c"
+#include <stdio.h>
+#include <string.h>
+
+int main(int ac, char* av[]) {
+  char command = av[1][0];
+  char buffer[256] = { 0 };
+  if (command == '0') {
+    if (fgets(buffer, 256, stdin)) {
+      printf("%s", buffer);
+      return 0;
+    }
+  } else if (command == 'p') {
+    while (fgets(buffer, 256, stdin)) {
+      if (strncmp(buffer, "Included patches: ", 18) == 0) {
+        printf("%s", buffer);
+        return 0;
+      }
+    }
+  }
+  return 1;
+}
+EOH
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -o "$name" >/dev/null 2>&1
+  then
+    result=`"./$name" 0 <"$name.out"`
+    version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9][0-9.]*\)' '|' x`
+    case x$version in
+      x) ;;
+      *)
+        result=`"./$name" p <"$name.out"`
+        patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' '|' x`
+        case x$patch in
+          x) echo "$version";;
+          *) echo "$version.$patch";;
+        esac;;
+    esac
+  fi
+}
+
+dromozoa_version_zeromq() {
+  name=_dromozoa_version_zeromq
+  cat <<EOH >"$name.c"
+#include <stdio.h>
+#include <zmq.h>
+
+int main(int ac, char* av[]) {
+  int major = 0;
+  int minor = 0;
+  int patch = 0;
+  zmq_version(&major, &minor, &patch);
+  printf("%d.%d.%d\n", major, minor, patch);
+  return 0;
+}
+EOH
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
+  then
+    "./$name"
+  fi
+}
+
+dromozoa_version() {
+  case x$1 in
+    xlua)
+      dromozoa_version_lua;;
+    xscreen)
+      result=`"$@" 2>&1 || :`
+      result=`expr "x$result" : 'x.* version \([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)' '|' x`
+      case x$result in
+        x) ;;
+        *)
+          major=`expr "x$result" : 'x\([0-9][0-9]*\)'`
+          minor=`expr "x$result" : 'x[0-9][0-9]*\.\([0-9][0-9]*\)'`
+          patch=`expr "x$result" : 'x[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)'`
+          printf '%d.%d.%d' "$major" "$minor" "$patch";;
+      esac;;
+    xvim)
+      if "$@" >_dromozoa_version_vim.out 2>&1
+      then
+        dromozoa_version_vim
+      fi;;
+    xzeromq)
+      dromozoa_version_zeromq;;
+    *)
+      if "$@" >/dev/null 2>&1
+      then
+        result=`"$@" 2>&1`
+        result=`expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9][0-9.]*\)' '|' 'x'`
+        case x$result in
+          x) ;;
+          *) echo "$result";;
+        esac
+      fi;;
+  esac
+}
 
 dromozoa_require() {
   printf "checking version of $1..."
@@ -393,7 +447,10 @@ dromozoa_package_vim() {
       with_lua_prefix=--without-lua-prefix;;
     *)
       lua_prefix=`dromozoa_dirname "$lua"`
-      lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$' '|' "x$lua_prefix" : 'x\(.*\)'`
+      if expr "x$lua_prefix" : 'x.*/bin$' >/dev/null 2>&1
+      then
+        lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$'`
+      fi
       enable_luainterp=--enable-luainterp=yes
       with_lua_prefix="--with-lua-prefix=$lua_prefix"
       case x$CFLAGS in

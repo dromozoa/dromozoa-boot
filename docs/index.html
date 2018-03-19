@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>dromozoa-boot</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css">
+<style>
+.markdown-body {
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 45px;
+}
+@media (max-width: 767px) {
+  .markdown-body {
+    padding: 15px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="markdown-body">
+
+<h1>dromozoa-boot</h1>
+
+<h2>リンク</h2>
+
+<ul>
+  <li><a href="https://www.gnu.org/software/autoconf/manual/">Autoconf</a>
+    <ul>
+      <li><a href="https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/html_node/Portable-Shell.html">Portable Shell Programming</a>
+        <ul>
+          <li><a href="https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/html_node/Limitations-of-Builtins.html">Limitations of Shell Builtins</a></li>
+          <li><a href="https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/html_node/Limitations-of-Usual-Tools.html">Limitations of Usual Tools
+          </a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2>可搬なシェルプログラミング</h2>
+
+<h3><code>expr |</code></h3>
+
+<p>
+<code>|</code>を使うことはできる。
+POSIXは<code>expr ''</code>が空文字列を返すとしているが、空文字列（または0）と空文字列で<code>|</code>を用いた場合の結果を規定していない。
+<p>
+
+<p>
+空文字列を避けることで、この可搬性の問題を避けることができる。
+</p>
+
+<h3><code>expr :</code></h3>
+
+<p>
+可搬な<code>expr</code>正規表現においては、文字列内の文字<code>$()*.0123456789[\^n{}</code>をエスケープする場合にのみ、<code>\</code>を使うべきである。
+可搬な<code>expr</code>正規表現は<code>^</code>で始まるべきでない。
+一方、複数行の文字列に対する<code>$</code>の振る舞いは可搬でない。
+</p>
+
+<p>
+<code>expr 'a' : '\(b\)'</code>が<code>0</code>を出力するか空文字列を出力するかについて、POSIX標準は曖昧である。
+多くの環境で空文字列が出力されるが、可搬なスクリプトはこれを仮定するべきでない。
+</p>
+
+<p>
+既定値として空文字列を与えるような正規化された振る舞いをさせるため、
+</p>
+
+<pre>expr a : '\(b\)' \| ''</pre>
+
+<p>
+のような方法が考えられる。不幸なことに、元の式と同じように動作する。
+</p>
+
+</div>
+</body>
+</html>
