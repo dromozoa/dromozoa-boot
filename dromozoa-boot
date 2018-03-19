@@ -59,88 +59,6 @@ dromozoa_search() {
   done
 }
 
-dromozoa_version_lua() {
-  name=_dromozoa_version_lua
-  cat <<EOH >"$name.c"
-#include <stdio.h>
-#include <lua.h>
-
-int main(int ac, char* av[]) {
-  const char* p = LUA_RELEASE;
-  if (*p++ != 'L') { return 1; }
-  if (*p++ != 'u') { return 1; }
-  if (*p++ != 'a') { return 1; }
-  if (*p++ != ' ') { return 1; }
-  printf("%s\n", p);
-  return 0;
-}
-EOH
-  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -llua -o "$name" >/dev/null 2>&1
-  then
-    "./$name"
-  fi
-}
-
-dromozoa_version_zeromq() {
-  name=_dromozoa_version_zeromq
-  cat <<EOH >"$name.c"
-#include <stdio.h>
-#include <zmq.h>
-
-int main(int ac, char* av[]) {
-  int major = 0;
-  int minor = 0;
-  int patch = 0;
-  zmq_version(&major, &minor, &patch);
-  printf("%d.%d.%d\n", major, minor, patch);
-  return 0;
-}
-EOH
-  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
-  then
-    "./$name"
-  fi
-}
-
-dromozoa_version() {
-  case x$1 in
-    xlua)
-      dromozoa_version_lua;;
-    xscreen)
-      result=`"$@" 2>&1 || :`
-      result=`expr "x$result" : 'x.* version \([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)' '|' x`
-      case x$result in
-        x) ;;
-        *)
-          major=`expr "x$result" : 'x\([0-9][0-9]*\)'`
-          minor=`expr "x$result" : 'x[0-9][0-9]*\.\([0-9][0-9]*\)'`
-          patch=`expr "x$result" : 'x[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)'`
-          printf '%d.%d.%d' "$major" "$minor" "$patch";;
-      esac;;
-    xvim)
-      if "$@" >/dev/null 2>&1
-      then
-        result=`"$@" 2>&1 | sed -n -e 1p`
-        version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9.]*\)' || :`
-        result=`"$@" 2>&1 | sed -n -e '/^Included patches:/p'`
-        patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' || :`
-        echo "$version.$patch"
-      fi;;
-    xzeromq)
-      dromozoa_version_zeromq;;
-    *)
-      if "$@" >/dev/null 2>&1
-      then
-        result=`"$@" 2>&1`
-        result=`expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' '|' 'x'`
-        case x$result in
-          x) ;;
-          *) echo "$result";;
-        esac
-      fi;;
-  esac
-}
-
 dromozoa_package_version_lua51() {
   echo 5.1.5
 }
@@ -264,6 +182,88 @@ case x`uname` in
     esac;;
 esac
 export PATH CPPFLAGS LDFLAGS
+
+dromozoa_version_lua() {
+  name=_dromozoa_version_lua
+  cat <<EOH >"$name.c"
+#include <stdio.h>
+#include <lua.h>
+
+int main(int ac, char* av[]) {
+  const char* p = LUA_RELEASE;
+  if (*p++ != 'L') { return 1; }
+  if (*p++ != 'u') { return 1; }
+  if (*p++ != 'a') { return 1; }
+  if (*p++ != ' ') { return 1; }
+  printf("%s\n", p);
+  return 0;
+}
+EOH
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -llua -o "$name" >/dev/null 2>&1
+  then
+    "./$name"
+  fi
+}
+
+dromozoa_version_zeromq() {
+  name=_dromozoa_version_zeromq
+  cat <<EOH >"$name.c"
+#include <stdio.h>
+#include <zmq.h>
+
+int main(int ac, char* av[]) {
+  int major = 0;
+  int minor = 0;
+  int patch = 0;
+  zmq_version(&major, &minor, &patch);
+  printf("%d.%d.%d\n", major, minor, patch);
+  return 0;
+}
+EOH
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
+  then
+    "./$name"
+  fi
+}
+
+dromozoa_version() {
+  case x$1 in
+    xlua)
+      dromozoa_version_lua;;
+    xscreen)
+      result=`"$@" 2>&1 || :`
+      result=`expr "x$result" : 'x.* version \([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)' '|' x`
+      case x$result in
+        x) ;;
+        *)
+          major=`expr "x$result" : 'x\([0-9][0-9]*\)'`
+          minor=`expr "x$result" : 'x[0-9][0-9]*\.\([0-9][0-9]*\)'`
+          patch=`expr "x$result" : 'x[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)'`
+          printf '%d.%d.%d' "$major" "$minor" "$patch";;
+      esac;;
+    xvim)
+      if "$@" >/dev/null 2>&1
+      then
+        result=`"$@" 2>&1 | sed -n -e 1p`
+        version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9.]*\)' || :`
+        result=`"$@" 2>&1 | sed -n -e '/^Included patches:/p'`
+        patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' || :`
+        echo "$version.$patch"
+      fi;;
+    xzeromq)
+      dromozoa_version_zeromq;;
+    *)
+      if "$@" >/dev/null 2>&1
+      then
+        result=`"$@" 2>&1`
+        result=`expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' '|' 'x'`
+        case x$result in
+          x) ;;
+          *) echo "$result";;
+        esac
+      fi;;
+  esac
+}
 
 dromozoa_require() {
   printf "checking version of $1..."
