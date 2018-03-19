@@ -285,9 +285,9 @@ dromozoa_version() {
       case x$result in
         xx) ;;
         *)
-          major=`expr "x$result" : 'x\([0-9][0-9]*\)'`
-          minor=`expr "x$result" : 'x[0-9][0-9]*\.\([0-9][0-9]*\)'`
-          patch=`expr "x$result" : 'x[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)'`
+          major=`expr "x$result" : 'x\([0-9][0-9]*\)' || :`
+          minor=`expr "x$result" : 'x[0-9][0-9]*\.\([0-9][0-9]*\)' || :`
+          patch=`expr "x$result" : 'x[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)' || :`
           printf '%d.%d.%d' "$major" "$minor" "$patch";;
       esac;;
     xvim)
