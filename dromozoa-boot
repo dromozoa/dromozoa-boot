@@ -60,7 +60,7 @@ dromozoa_search() {
 }
 
 dromozoa_version_lua() {
-  name=dromozoa-version-lua
+  name=_dromozoa_version_lua
   cat <<EOH >"$name.c"
 #include <stdio.h>
 #include <lua.h>
@@ -82,7 +82,7 @@ EOH
 }
 
 dromozoa_version_zeromq() {
-  name=dromozoa-version-zeromq
+  name=_dromozoa_version_zeromq
   cat <<EOH >"$name.c"
 #include <stdio.h>
 #include <zmq.h>
@@ -108,10 +108,15 @@ dromozoa_version() {
       dromozoa_version_lua;;
     xscreen)
       result=`"$@" 2>&1 || :`
-      major=`expr "x$result" : 'x.* version \([0-9][0-9]*\)' || :`
-      minor=`expr "x$result" : 'x.* version [0-9][0-9]*\.\([0-9][0-9]*\)' || :`
-      patch=`expr "x$result" : 'x.* version [0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)' || :`
-      printf '%d.%d.%d' "$major" "$minor" "$patch";;
+      result=`expr "x$result" : 'x.* version \([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)' '|' x`
+      case x$result in
+        x) ;;
+        *)
+          major=`expr "x$result" : 'x\([0-9][0-9]*\)'`
+          minor=`expr "x$result" : 'x[0-9][0-9]*\.\([0-9][0-9]*\)'`
+          patch=`expr "x$result" : 'x[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)'`
+          printf '%d.%d.%d' "$major" "$minor" "$patch";;
+      esac;;
     xvim)
       if "$@" >/dev/null 2>&1
       then
@@ -127,7 +132,11 @@ dromozoa_version() {
       if "$@" >/dev/null 2>&1
       then
         result=`"$@" 2>&1`
-        expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' || :
+        result=`expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' '|' 'x'`
+        case x$result in
+          x) ;;
+          *) echo "$result";;
+        esac
       fi;;
   esac
 }
