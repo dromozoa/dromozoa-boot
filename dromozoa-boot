@@ -301,9 +301,9 @@ dromozoa_version() {
       if "$@" >/dev/null 2>&1
       then
         result=`"$@" 2>&1`
-        result=`expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9][0-9.]*\)' '|' 'x'`
+        result=`expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9][0-9.]*\)' '|' x`
         case x$result in
-          x) ;;
+          xx) ;;
           *) echo "$result";;
         esac
       fi;;
