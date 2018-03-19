@@ -234,7 +234,7 @@ EOH
   if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -o "$name" >/dev/null 2>&1
   then
     result=`"./$name" 0 <"$name.out"`
-    version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9.]*\)' '|' x`
+    version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9][0-9.]*\)' '|' x`
     case x$version in
       x) ;;
       *)
@@ -295,7 +295,7 @@ dromozoa_version() {
       if "$@" >/dev/null 2>&1
       then
         result=`"$@" 2>&1`
-        result=`expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' '|' 'x'`
+        result=`expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9][0-9.]*\)' '|' 'x'`
         case x$result in
           x) ;;
           *) echo "$result";;
@@ -447,7 +447,10 @@ dromozoa_package_vim() {
       with_lua_prefix=--without-lua-prefix;;
     *)
       lua_prefix=`dromozoa_dirname "$lua"`
-      lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$' '|' "x$lua_prefix" : 'x\(.*\)'`
+      if expr "x$lua_prefix" : 'x.*/bin$' >/dev/null 2>&1
+      then
+        lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$'`
+      fi
       enable_luainterp=--enable-luainterp=yes
       with_lua_prefix="--with-lua-prefix=$lua_prefix"
       case x$CFLAGS in
