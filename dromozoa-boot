@@ -206,6 +206,48 @@ EOH
   fi
 }
 
+dromozoa_version_vim() {
+  name=_dromozoa_version_vim
+  cat <<EOH >"$name.c"
+#include <stdio.h>
+#include <string.h>
+
+int main(int ac, char* av[]) {
+  char command = av[1][0];
+  char buffer[256] = { 0 };
+  if (command == '0') {
+    if (fgets(buffer, 256, stdin)) {
+      printf("%s", buffer);
+      return 0;
+    }
+  } else if (command == 'p') {
+    while (fgets(buffer, 256, stdin)) {
+      if (strncmp(buffer, "Included patches: ", 18) == 0) {
+        printf("%s", buffer);
+        return 0;
+      }
+    }
+  }
+  return 1;
+}
+EOH
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -o "$name" >/dev/null 2>&1
+  then
+    result=`"./$name" 0 <"$name.out"`
+    version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9.]*\)' '|' x`
+    case x$version in
+      x) ;;
+      *)
+        result=`"./$name" p <"$name.out"`
+        patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' '|' x`
+        case x$patch in
+          x) echo "$version";;
+          *) echo "$version.$patch";;
+        esac;;
+    esac
+  fi
+}
+
 dromozoa_version_zeromq() {
   name=_dromozoa_version_zeromq
   cat <<EOH >"$name.c"
@@ -243,13 +285,9 @@ dromozoa_version() {
           printf '%d.%d.%d' "$major" "$minor" "$patch";;
       esac;;
     xvim)
-      if "$@" >/dev/null 2>&1
+      if "$@" >_dromozoa_version_vim.out 2>&1
       then
-        result=`"$@" 2>&1 | sed -n -e 1p`
-        version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9.]*\)' || :`
-        result=`"$@" 2>&1 | sed -n -e '/^Included patches:/p'`
-        patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' || :`
-        echo "$version.$patch"
+        dromozoa_version_vim
       fi;;
     xzeromq)
       dromozoa_version_zeromq;;
