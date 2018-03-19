@@ -128,7 +128,13 @@ do
       esac
       shift; prefix=$1; shift;;
     x--prefix=*|x--prefi=*|x--pref=*|x--pre=*|x--pr=*|x--p=*)
-      prefix=`expr "x$1" : 'x--p[^=]*=\(.*\)'`; shift;;
+      if expr "x$1" : 'x--p[^=]*=$' >/dev/null 2>&1
+      then
+        prefix=
+      else
+        prefix=`expr "x$1" : 'x--p[^=]*=\(.*\)'`
+      fi
+      shift;;
     x--)
       shift; break;;
     x-*)
@@ -188,16 +194,16 @@ dromozoa_version_lua() {
   name=_dromozoa_version_lua
   cat <<EOH >"$name.c"
 #include <stdio.h>
+#include <string.h>
 #include <lua.h>
 
 int main(int ac, char* av[]) {
   const char* p = LUA_RELEASE;
-  if (*p++ != 'L') { return 1; }
-  if (*p++ != 'u') { return 1; }
-  if (*p++ != 'a') { return 1; }
-  if (*p++ != ' ') { return 1; }
-  printf("%s\n", p);
-  return 0;
+  if (p && strncmp(p, "Lua ", 4) == 0) {
+    printf("%s\n", p + 4);
+    return 0;
+  }
+  return 1;
 }
 EOH
   if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -llua -o "$name" >/dev/null 2>&1
@@ -346,6 +352,7 @@ dromozoa_prepare() {
   echo "extracting $filename..."
   case x$filename in
     x*.tar.gz) gunzip -cd "$filename" | tar xf -;;
+    *) echo "could not extract $filename" >&2; exit 1;;
   esac
   case x$2 in
     x) dirname=`expr "x$filename" : 'x\(.*\)\.tar'`;;
@@ -440,32 +447,33 @@ dromozoa_package_vim() {
   esac
   dromozoa_prepare "$package_url" "vim-$package_version"
 
+  enable_luainterp=--enable-luainterp=no
+  with_lua_prefix=--without-lua-prefix
+  with_luajit=--without-luajit
+
   lua=`dromozoa_search luajit lua`
   case x$lua in
-    x)
-      enable_luainterp=--enable-luainterp=no
-      with_lua_prefix=--without-lua-prefix;;
+    x) ;;
     *)
       lua_prefix=`dromozoa_dirname "$lua"`
-      if expr "x$lua_prefix" : 'x.*/bin$' >/dev/null 2>&1
+      if expr "x$lua_prefix" : 'x..*/bin$' >/dev/null 2>&1
       then
-        lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$'`
-      fi
-      enable_luainterp=--enable-luainterp=yes
-      with_lua_prefix="--with-lua-prefix=$lua_prefix"
-      case x$CFLAGS in
-        x) CFLAGS="-std=gnu99";;
-        *) CFLAGS="-std=gnu99 $CFLAGS";;
-      esac
-      case x`uname` in
-        xDarwin) ;;
-        *) LDFLAGS="-Wl,-rpath -Wl,$lua_prefix/lib $LDFLAGS";;
-      esac
-      export CFLAGS LDFLAGS;;
-  esac
-  case x$lua in
-    */luajit) with_luajit=--with-luajit;;
-    *) with_luajit=--without-luajit;;
+        lua_prefix=`expr "x$lua_prefix" : 'x\(..*\)/bin$'`
+        enable_luainterp=--enable-luainterp=yes
+        with_lua_prefix=--with-lua-prefix=$lua_prefix
+        case x$lua in
+          */luajit) with_luajit=--with-luajit;;
+        esac
+        case x$CFLAGS in
+          x) CFLAGS="-std=gnu99";;
+          *) CFLAGS="-std=gnu99 $CFLAGS";;
+        esac
+        case x`uname` in
+          xDarwin) ;;
+          *) LDFLAGS="-Wl,-rpath -Wl,$lua_prefix/lib $LDFLAGS";;
+        esac
+        export CFLAGS LDFLAGS
+      fi;;
   esac
 
   dromozoa_build \
