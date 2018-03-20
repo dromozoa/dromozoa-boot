@@ -18,10 +18,10 @@
 # along with dromozoa-boot.  If not, see <http://www.gnu.org/licenses/>.
 
 dromozoa_basename() {
-  expr "x$1" : 'x.*/\([^/][^/]*\)/*$' \
-    '|' "x$1" : 'x\(//\)$' \
-    '|' "x$1" : 'x\(/\)' \
-    '|' "x$1" : 'x\(.*\)'
+  expr  "X$1" : 'X.*/\([^/][^/]*\)/*$' \
+    '|' "X$1" : 'X\(//\)$' \
+    '|' "X$1" : 'X\(/\)' \
+    '|' "X$1" : 'X\(.*\)'
 }
 
 dromozoa_dirname() {
