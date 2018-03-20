@@ -45,7 +45,8 @@ dromozoa_check usr      .    usr
 dromozoa_check /        /    /
 dromozoa_check .        .    .
 dromozoa_check ..       .    ..
-dromozoa_check /000/000 /000 000
+dromozoa_check /00/000  /00  000
+dromozoa_check 000/000  000  000
 
 case x`echo foo bar baz` in
   xfoo*baz) ;;
@@ -57,7 +58,6 @@ dromozoa_search() {
   while :
   do
     i=`expr "x$path" : 'x:\([^:]*\)' '|' .`
-    echo "[$i]"
     for j in "$@"
     do
       if test -x "$i/$j"
