@@ -134,12 +134,7 @@ do
       esac
       shift; prefix=$1; shift;;
     x--prefix=*|x--prefi=*|x--pref=*|x--pre=*|x--pr=*|x--p=*)
-      if expr "x$1" : 'x--p[^=]*=$' >/dev/null 2>&1
-      then
-        prefix=
-      else
-        prefix=`expr "x$1" : 'x--p[^=]*=\(.*\)'`
-      fi
+      prefix=`expr "X$1" : 'X--p[^=]*\(=.*\)' | sed 's/^.//'`
       shift;;
     x--)
       shift; break;;
@@ -245,14 +240,14 @@ EOH
   if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -o "$name" >/dev/null 2>&1
   then
     result=`"./$name" 0 <"$name.out"`
-    version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9][0-9.]*\)' '|' x`
-    case x$version in
-      xx) ;;
+    version=`expr "X$result" : 'X.*\( [0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
+    case X$version in
+      X) ;;
       *)
         result=`"./$name" p <"$name.out"`
-        patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' '|' x`
-        case x$patch in
-          xx) echo "$version";;
+        patch=`expr "X$result" : 'X.*\([^0-9][0-9][0-9]*\)$' | sed 's/^.//'`
+        case X$patch in
+          X) echo "$version";;
           *) echo "$version.$patch";;
         esac;;
     esac
@@ -286,13 +281,13 @@ dromozoa_version() {
       dromozoa_version_lua;;
     xscreen)
       result=`"$@" 2>&1 || :`
-      result=`expr "x$result" : 'x.* version \([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)' '|' x`
-      case x$result in
-        xx) ;;
+      result=`expr "X$result" : 'X.* version\( [0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)' | sed 's/^.//'`
+      case X$result in
+        X) ;;
         *)
-          major=`expr "x$result" : 'x\([0-9][0-9]*\)' || :`
-          minor=`expr "x$result" : 'x[0-9][0-9]*\.\([0-9][0-9]*\)' || :`
-          patch=`expr "x$result" : 'x[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)' || :`
+          major=`expr "X$result" : '\(X[0-9][0-9]*\)' | sed 's/^.//'`
+          minor=`expr "X$result" : 'X[0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.//'`
+          patch=`expr "X$result" : 'X[0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.//'`
           printf '%d.%d.%d' "$major" "$minor" "$patch";;
       esac;;
     xvim)
@@ -306,11 +301,8 @@ dromozoa_version() {
       if "$@" >/dev/null 2>&1
       then
         result=`"$@" 2>&1`
-        result=`expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9][0-9.]*\)' '|' x`
-        case x$result in
-          xx) ;;
-          *) echo "$result";;
-        esac
+        result=`expr "X$result" : 'X.*\([ v][0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
+        echo "$result"
       fi;;
   esac
 }
@@ -360,7 +352,7 @@ dromozoa_prepare() {
     *) echo "could not extract $filename" >&2; exit 1;;
   esac
   case x$2 in
-    x) dirname=`expr "x$filename" : 'x\(.*\)\.tar'`;;
+    x) dirname=`expr "X$filename" : '\(X.*\)\.tar' | sed 's/^.//'`;;
     *) dirname=$2;;
   esac
   echo "building in $dirname..."
@@ -461,24 +453,21 @@ dromozoa_package_vim() {
     x) ;;
     *)
       lua_prefix=`dromozoa_dirname "$lua"`
-      if expr "x$lua_prefix" : 'x..*/bin$' >/dev/null 2>&1
-      then
-        lua_prefix=`expr "x$lua_prefix" : 'x\(..*\)/bin$'`
-        enable_luainterp=--enable-luainterp=yes
-        with_lua_prefix=--with-lua-prefix=$lua_prefix
-        case x$lua in
-          */luajit) with_luajit=--with-luajit;;
-        esac
-        case x$CFLAGS in
-          x) CFLAGS="-std=gnu99";;
-          *) CFLAGS="-std=gnu99 $CFLAGS";;
-        esac
-        case x`uname` in
-          xDarwin) ;;
-          *) LDFLAGS="-Wl,-rpath -Wl,$lua_prefix/lib $LDFLAGS";;
-        esac
-        export CFLAGS LDFLAGS
-      fi;;
+      lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/bin$' '|' "X$lua_prefix" | sed 's/^.//'`
+      enable_luainterp=--enable-luainterp=yes
+      with_lua_prefix=--with-lua-prefix=$lua_prefix
+      case x$lua in
+        */luajit) with_luajit=--with-luajit;;
+      esac
+      case x$CFLAGS in
+        x) CFLAGS="-std=gnu99";;
+        *) CFLAGS="-std=gnu99 $CFLAGS";;
+      esac
+      case x`uname` in
+        xDarwin) ;;
+        *) LDFLAGS="-Wl,-rpath -Wl,$lua_prefix/lib $LDFLAGS";;
+      esac
+      export CFLAGS LDFLAGS;;
   esac
 
   dromozoa_build \
