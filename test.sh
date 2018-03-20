@@ -21,7 +21,7 @@ dromozoa_basename() {
   expr  "X$1" : 'X.*\(/[^/][^/]*\)/*$' \
     '|' "X$1" : '\(X//\)$' \
     '|' "X$1" : '\(X/\)' \
-    '|' "X$1" | sed 's,^.,,'
+    '|' "X$1" | sed 's/^.//'
 }
 
 dromozoa_dirname() {
@@ -29,14 +29,24 @@ dromozoa_dirname() {
     '|' "X$1" : '\(X//\)[^/]' \
     '|' "X$1" : '\(X//\)$' \
     '|' "X$1" : '\(X/\)' \
-    '|' X. | sed 's,^.,,'
+    '|' X. | sed 's/^.//'
 }
 
 dromozoa_check() {
   result=`dromozoa_dirname "$1"`
-  test "x$result" = "x$2" || echo "error: dirname($1) $result != $2"
+  if test "X$result" = "X$2"
+  then
+    :
+  else
+    echo "error: dromozoa_dirname '$1' ('$result' != '$2')" >&2
+  fi
   result=`dromozoa_basename "$1"`
-  test "x$result" = "x$3" || echo "error: basename($1) $result != $3"
+  if test "X$result" = "X$3"
+  then
+    :
+  else
+    echo "error: dromozoa_basename '$1' ('$result' != '$2')" >&2
+  fi
 }
 
 dromozoa_check /usr/lib /usr lib
@@ -48,8 +58,8 @@ dromozoa_check ..       .    ..
 dromozoa_check /00/000  /00  000
 dromozoa_check 000/000  000  000
 
-case x`echo foo bar baz` in
-  xfoo*baz) ;;
+case X`echo foo bar baz` in
+  Xfoo*baz) ;;
   *) echo error;;
 esac
 
@@ -57,7 +67,10 @@ dromozoa_search() {
   path=:$PATH
   while :
   do
-    i=`expr "x$path" : 'x:\([^:]*\)' '|' .`
+    i=`expr "X$path" : 'X\(:[^:]*\)' | sed 's/^.//'`
+    case X$i in
+      X) i=.;;
+    esac
     for j in "$@"
     do
       if test -x "$i/$j"
@@ -67,11 +80,10 @@ dromozoa_search() {
         return
       fi
     done
-    if expr "x$path" : 'x:[^:]*$' >/dev/null 2>&1
-    then
-      return
-    fi
-    path=`expr "x$path" : 'x:[^:]*\(.*\)'`
+    path=`expr "X$path" : 'X:[^:]*\(:.*\)' '|' X`
+    case X$path in
+      XX) return;;
+    esac
   done
 }
 
@@ -79,9 +91,22 @@ path_save=$PATH
 PATH=$PATH::.
 export PATH
 
-dromozoa_search lua
-dromozoa_search vim
-dromozoa_search no-such-command
+result=`dromozoa_search lua`
+case X$result in
+  X*/lua) ;;
+  *) echo "error dromozoa_search 'lua'" >&2;;
+esac
+result=`dromozoa_search vim`
+case X$result in
+  X*/vim) ;;
+  *) echo "error dromozoa_search 'vim'" >&2;;
+esac
+result=`dromozoa_search no-such-command`
+case X$result in
+  X) ;;
+  *) echo "error dromozoa_search 'no-such-command'" >&2;;
+esac
+dromozoa_search luajit lua
 
 PATH=$path_save
 export PATH
