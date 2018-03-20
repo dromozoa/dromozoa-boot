@@ -30,10 +30,10 @@
 <ul>
   <li><a href="https://www.gnu.org/software/autoconf/manual/">Autoconf</a>
     <ul>
-      <li><a href="https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/html_node/Portable-Shell.html">Portable Shell Programming</a>
+      <li><a href="https://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html">Portable Shell Programming</a>
         <ul>
-          <li><a href="https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/html_node/Limitations-of-Builtins.html">Limitations of Shell Builtins</a></li>
-          <li><a href="https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/html_node/Limitations-of-Usual-Tools.html">Limitations of Usual Tools
+          <li><a href="https://www.gnu.org/software/autoconf/manual/html_node/Limitations-of-Builtins.html">Limitations of Shell Builtins</a></li>
+          <li><a href="https://www.gnu.org/software/autoconf/manual/html_node/Limitations-of-Usual-Tools.html">Limitations of Usual Tools
           </a></li>
         </ul>
       </li>
@@ -41,40 +41,92 @@
   </li>
 </ul>
 
-<h2>可搬なシェルプログラミング</h2>
-
-<h3><code>expr |</code></h3>
+<h2>可搬性</h2>
 
 <p>
-<code>|</code>を使うことはできる。
-POSIXは<code>expr ''</code>が空文字列を返すとしているが、空文字列（または0）と空文字列で<code>|</code>を用いた場合の結果を規定していない。
-<p>
-
-<p>
-空文字列を避けることで、この可搬性の問題を避けることができる。
-</p>
-
-<h3><code>expr :</code></h3>
-
-<p>
-可搬な<code>expr</code>正規表現においては、文字列内の文字<code>$()*.0123456789[\^n{}</code>をエスケープする場合にのみ、<code>\</code>を使うべきである。
-可搬な<code>expr</code>正規表現は<code>^</code>で始まるべきでない。
-一方、複数行の文字列に対する<code>$</code>の振る舞いは可搬でない。
+現実の複雑な文字列処理を望むならば、<code>expr</code>のマッチ演算子<code>:</code>（と論理和演算子<code>|</code>）を駆使しなければならない。人生同様、いくつかの局面で、あなたと私は<code>expr</code>に裏切られる。やれやれ。
 </p>
 
 <p>
-<code>expr 'a' : '\(b\)'</code>が<code>0</code>を出力するか空文字列を出力するかについて、POSIX標準は曖昧である。
-多くの環境で空文字列が出力されるが、可搬なスクリプトはこれを仮定するべきでない。
+あなたが<code>sed</code>や<code>awk</code>といったユーティリティたちを使いこなせるならば、うんうん、それもまたユニックスだね。人生同様、ユーティリティたちは銀の弾丸であなたの足を撃ち抜く。やれやれ。
 </p>
 
+<h3>単純な例示と複雑な結果</h3>
+
+<pre>expr "X$s" : 'X\([0-9a-z]*\)'</pre>
+
+<table>
+  <tr>
+    <th rowspan="2">入力</th>
+    <th rowspan="2">出力</th>
+    <th colspan="2">結果</th>
+  </tr>
+  <tr>
+    <th>BSD</th>
+    <th>GNU</th>
+  </tr>
+  <tr>
+    <td>空文字列</td>
+    <td>空文字列</td>
+    <td><code>1</code></td>
+    <td><code>1</code></td>
+  </tr>
+  <tr>
+    <td><code>foo</code></td>
+    <td><code>foo</code></td>
+    <td><code>0</code></td>
+    <td><code>0</code></td>
+  </tr>
+  <tr>
+    <td><code>BAR</code></td>
+    <td>空文字列</td>
+    <td><code>1</code></td>
+    <td><code>1</code></td>
+  </tr>
+  <tr>
+    <td><code>0</code></td>
+    <td><code>0</code></td>
+    <td><code>0</code></td>
+    <td><code>1</code></td>
+  </tr>
+  <tr>
+    <td><code>0000</code></td>
+    <td><code>0000</code></td>
+    <td><code>0</code></td>
+    <td><code>1</code></td>
+  </tr>
+  <tr>
+    <td><code>0x00</code></td>
+    <td><code>0x00</code></td>
+    <td><code>0</code></td>
+    <td><code>0</code></td>
+  </tr>
+</table>
+
+<h3>Autoconfは教えている</h3>
+
+<h4>POSIX標準</h4>
+
+<blockquote cite="https://www.gnu.org/software/autoconf/manual/html_node/Limitations-of-Usual-Tools.html">
 <p>
-既定値として空文字列を与えるような正規化された振る舞いをさせるため、
+<code>expr 'a' : '\(b\)'</code>が<code>0</code>と空文字列のどちらを出力するのかについて、POSIX標準は曖昧である。QNX 4.25の<code>expr</code>は<code>0</code>を返す。
 </p>
+</blockquote>
 
-<pre>expr a : '\(b\)' \| ''</pre>
+<h4>Tru64</h4>
+
+<blockquote cite="https://www.gnu.org/software/autoconf/manual/html_node/Limitations-of-Usual-Tools.html">
+<p>
+Tru64の<code>expr</code>は数値として結果を扱う。
+</p>
+<pre>
+$ expr 00001 : '.*\(...\)'
+1
+</pre>
+</blockquote>
 
 <p>
-のような方法が考えられる。不幸なことに、元の式と同じように動作する。
+世に非互換の種は尽きまじとAutoconfは教えている。Tru64は腹を切って死ぬべきである。
 </p>
 
 </div>

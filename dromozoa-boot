@@ -22,11 +22,15 @@ then
   unset CDPATH
 fi
 
+LANG=C
+LC_ALL=C
+export LANG LC_ALL
+
 dromozoa_basename() {
-  expr "x$1" : 'x.*/\([^/][^/]*\)/*$' \
-    '|' "x$1" : 'x\(//\)$' \
-    '|' "x$1" : 'x\(/\)' \
-    '|' "x$1" : 'x\(.*\)'
+  expr  "X$1" : 'X.*/\([^/][^/]*\)/*$' \
+    '|' "X$1" : 'X\(//\)$' \
+    '|' "X$1" : 'X\(/\)' \
+    '|' "X$1" : 'X\(.*\)'
 }
 
 dromozoa_dirname() {
@@ -167,7 +171,6 @@ esac
 mkdir -p "$prefix"
 prefix=`(cd "$prefix" && pwd)`
 
-LANG=C
 case x$PATH in
   x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
   *) PATH=$prefix/bin:$PATH;;
@@ -188,7 +191,7 @@ case x`uname` in
       *) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib $LDFLAGS";;
     esac;;
 esac
-export LANG PATH CPPFLAGS LDFLAGS
+export PATH CPPFLAGS LDFLAGS
 
 dromozoa_version_lua() {
   name=_dromozoa_version_lua
