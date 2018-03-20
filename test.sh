@@ -25,10 +25,10 @@ dromozoa_basename() {
 }
 
 dromozoa_dirname() {
-  expr "x$1" : 'x\(.*[^/]\)//*[^/][^/]*/*$' \
-    '|' "x$1" : 'x\(//\)[^/]' \
-    '|' "x$1" : 'x\(//\)$' \
-    '|' "x$1" : 'x\(/\)' \
+  expr  "X$1" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \
+    '|' "X$1" : 'X\(//\)[^/]' \
+    '|' "X$1" : 'X\(//\)$' \
+    '|' "X$1" : 'X\(/\)' \
     '|' .
 }
 
@@ -45,6 +45,7 @@ dromozoa_check usr      .    usr
 dromozoa_check /        /    /
 dromozoa_check .        .    .
 dromozoa_check ..       .    ..
+dromozoa_check /000/000 /000 000
 
 case x`echo foo bar baz` in
   xfoo*baz) ;;
