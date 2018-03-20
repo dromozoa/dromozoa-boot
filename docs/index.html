@@ -113,7 +113,7 @@
 
 <blockquote cite="https://www.gnu.org/software/autoconf/manual/html_node/Limitations-of-Usual-Tools.html">
 <p>
-<code>expr 'a' : '\(b\)'</code>が<code>0</code>と空文字列のどちらを出力するのかについて、POSIX標準は曖昧である。QNX 4.25の<code>expr</code>は<code>0</code>を返す。
+<code>expr 'a' : '\(b\)'</code>が<code>0</code>と空文字列のどちらを出力するのかについて、POSIX標準はあいまいである。QNX 4.25の<code>expr</code>は<code>0</code>を返す。
 </p>
 </blockquote>
 
@@ -133,7 +133,7 @@ $ expr 00001 : '.*\(...\)'
 世に非互換の種は尽きまじとAutoconfは教えている。
 </p>
 
-<h3>Welcome to the Dessert of the...</h3>
+<h3>Welcome to the Dessert of the Tru64</h3>
 
 <p>
 Tru64は腹を切って死ぬべきだ。理由は<code>expr</code>による部分文字列抽出を不能ならしめた犯人であり、<code>expr</code>を殺すなら自分が死ぬべきが当然だからだ。
@@ -144,7 +144,7 @@ Tru64は腹を切って死ぬべきだ。理由は<code>expr</code>による部�
 <pre>expr "X$s" : '\(X[0-9a-z]*\)' | sed 's/^.//'</pre>
 
 <p>
-マッチが成功するとき、マッチ結果が空でなく数値に変換されない文字列になるように、適当な文字（たとえば<code>X</code>）で接頭する。マッチが失敗するとき、<code>expr</code>は空文字列または<code>0</code>を出力する。パイプは結果コードを無視し、<code>sed</code>が接頭した一文字を削る。
+マッチが成功するとき、マッチ結果が空でなく数値に変換されない文字列になるように、適当な文字（たとえば<code>X</code>）で接頭する。マッチが失敗するとき、あいまいな<code>expr</code>は空文字列または<code>0</code>を出力する。パイプは結果コードを無視し、<code>sed</code>は最初の一文字を削る。
 </p>
 
 <p>
