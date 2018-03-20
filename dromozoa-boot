@@ -241,7 +241,10 @@ dromozoa_version() {
       major=`expr "X$result" : 'X.* version\( [0-9][0-9]*\)' | sed 's/^.//'`
       minor=`expr "X$result" : 'X.* version [0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.//'`
       patch=`expr "X$result" : 'X.* version [0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.//'`
-      printf '%d.%d.%d' "$major" "$minor" "$patch";;
+      case X$major in
+        X) ;;
+        *) printf '%d.%d.%d' "$major" "$minor" "$patch";;
+      esac;;
     Xvim)
       if "$@" >_dromozoa_version_vim 2>&1
       then
