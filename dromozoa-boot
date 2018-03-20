@@ -211,49 +211,6 @@ EOH
   fi
 }
 
-# TODO refactor
-dromozoa_version_vim() {
-  name=_dromozoa_version_vim
-  cat <<EOH >"$name.c"
-#include <stdio.h>
-#include <string.h>
-
-int main(int ac, char* av[]) {
-  char command = av[1][0];
-  char buffer[256] = { 0 };
-  if (command == '0') {
-    if (fgets(buffer, 256, stdin)) {
-      printf("%s", buffer);
-      return 0;
-    }
-  } else if (command == 'p') {
-    while (fgets(buffer, 256, stdin)) {
-      if (strncmp(buffer, "Included patches: ", 18) == 0) {
-        printf("%s", buffer);
-        return 0;
-      }
-    }
-  }
-  return 1;
-}
-EOH
-  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -o "$name" >/dev/null 2>&1
-  then
-    result=`"./$name" 0 <"$name.out"`
-    version=`expr "X$result" : 'X.*\( [0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
-    case X$version in
-      X) ;;
-      *)
-        result=`"./$name" p <"$name.out"`
-        patch=`expr "X$result" : 'X.*\([^0-9][0-9][0-9]*\)$' | sed 's/^.//'`
-        case X$patch in
-          X) echo "$version";;
-          *) echo "$version.$patch";;
-        esac;;
-    esac
-  fi
-}
-
 dromozoa_version_zeromq() {
   name=_dromozoa_version_zeromq
   cat <<EOH >"$name.c"
@@ -286,16 +243,23 @@ dromozoa_version() {
       patch=`expr "X$result" : 'X.* version [0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.//'`
       printf '%d.%d.%d' "$major" "$minor" "$patch";;
     Xvim)
-      if "$@" >_dromozoa_version_vim.out 2>&1
+      if "$@" >_dromozoa_version_vim 2>&1
       then
-        dromozoa_version_vim
+        result=`sed -n 1p <_dromozoa_version_vim`
+        version=`expr "X$result" : 'X.*\( [0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
+        result=`sed -n '/^Included patches:/p' <_dromozoa_version_vim`
+        patch=`expr "X$result" : 'X.*\([^0-9][0-9][0-9]*\)$' | sed 's/^.//'`
+        case X$patch in
+          X) echo "$version";;
+          *) echo "$version.$patch";;
+        esac
       fi;;
     Xzeromq)
       dromozoa_version_zeromq;;
     *)
-      if "$@" >/dev/null 2>&1
+      if "$@" >"_dromozoa_version_$1" 2>&1
       then
-        result=`"$@" 2>&1`
+        result=`cat "_dromozoa_version_$1"`
         result=`expr "X$result" : 'X.*\([ v][0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
         echo "$result"
       fi;;

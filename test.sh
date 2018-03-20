@@ -113,5 +113,10 @@ case X$result in
 esac
 dromozoa_search luajit lua
 
+printf 'foo\nb a r\n baz \n' | while read item
+do
+  echo "[$item]"
+done
+
 PATH=$path_save
 export PATH
