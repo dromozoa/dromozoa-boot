@@ -96,6 +96,11 @@ case X$result in
   X*/lua) ;;
   *) echo "error dromozoa_search 'lua'" >&2;;
 esac
+# lua_prefix=/var/tmp/prefix/bin
+lua_prefix=`dromozoa_dirname "$result"`
+lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/[^/]*bin$' '|' "X$lua_prefix" | sed 's/^.//'`
+echo "$lua_prefix"
+
 result=`dromozoa_search vim`
 case X$result in
   X*/vim) ;;
