@@ -22,109 +22,9 @@ then
   unset CDPATH
 fi
 
-dromozoa_basename() {
-  expr "x$1" : 'x.*/\([^/][^/]*\)/*$' \
-    '|' "x$1" : 'x\(//\)$' \
-    '|' "x$1" : 'x\(/\)' \
-    '|' "x$1" : 'x\(.*\)'
-}
-
-dromozoa_dirname() {
-  expr "x$1" : 'x\(.*[^/]\)//*[^/][^/]*/*$' \
-    '|' "x$1" : 'x\(//\)[^/]' \
-    '|' "x$1" : 'x\(//\)$' \
-    '|' "x$1" : 'x\(/\)' \
-    '|' .
-}
-
-dromozoa_search() {
-  path=:$PATH
-  while :
-  do
-    i=`expr "x$path" : 'x:\([^:]*\)' || :`
-    case x$i in
-      x) i=.;;
-    esac
-    for j in "$@"
-    do
-      if test -x "$i/$j"
-      then
-        i=`(cd "$i" && pwd)`
-        echo "$i/$j"
-        return
-      fi
-    done
-    path=`expr "x$path" : 'x:[^:]*\(.*\)' || :`
-    case x$path in
-      x) return;;
-    esac
-  done
-}
-
-dromozoa_version() {
-  case x$1 in
-    xlua)
-      name=dromozoa-boot-lua-version
-      cat <<EOH >"$name.c"
-#include <stdio.h>
-#include <lua.h>
-
-int main(int ac, char* av[]) {
-  const char* p = LUA_RELEASE;
-  if (*p++ != 'L') { return 1; }
-  if (*p++ != 'u') { return 1; }
-  if (*p++ != 'a') { return 1; }
-  if (*p++ != ' ') { return 1; }
-  printf("%s\n", p);
-  return 0;
-}
-EOH
-      if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -llua -o "$name" >/dev/null 2>&1
-      then
-        "./$name"
-      fi;;
-    xscreen)
-      result=`"$@" 2>&1 || :`
-      major=`expr "x$result" : 'x.* version \([0-9][0-9]*\)' || :`
-      minor=`expr "x$result" : 'x.* version [0-9][0-9]*\.\([0-9][0-9]*\)' || :`
-      patch=`expr "x$result" : 'x.* version [0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)' || :`
-      printf '%d.%d.%d' "$major" "$minor" "$patch";;
-    xvim)
-      if "$@" >/dev/null 2>&1
-      then
-        result=`"$@" 2>&1 | sed -n -e 1p`
-        version=`expr "x$result" : 'x.* \([0-9][0-9]*\.[0-9.]*\)' || :`
-        result=`"$@" 2>&1 | sed -n -e '/^Included patches:/p'`
-        patch=`expr "x$result" : 'x.*[^0-9]\([0-9][0-9]*\)$' || :`
-        echo "$version.$patch"
-      fi;;
-    xzeromq)
-      name=dromozoa-boot-zeromq-version
-      cat <<EOH >"$name.c"
-#include <stdio.h>
-#include <zmq.h>
-
-int main(int ac, char* av[]) {
-  int major = 0;
-  int minor = 0;
-  int patch = 0;
-  zmq_version(&major, &minor, &patch);
-  printf("%d.%d.%d\n", major, minor, patch);
-  return 0;
-}
-EOH
-      if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
-      then
-        "./$name"
-      fi;;
-    *)
-      if "$@" >/dev/null 2>&1
-      then
-        result=`"$@" 2>&1`
-        expr "x$result" : 'x.*[ v]\([0-9][0-9]*\.[0-9.]*\)' || :
-      fi;;
-  esac
-}
+LANG=C
+LC_ALL=C
+export LANG LC_ALL
 
 dromozoa_package_version_lua51() {
   echo 5.1.5
@@ -147,7 +47,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 8.0.1605
+  echo 8.0.1617
 }
 
 dromozoa_package_version_autoconf() {
@@ -179,41 +79,42 @@ insecure=false
 prefix=
 while :
 do
-  case x$# in
-    x0) break;;
+  case X$# in
+    X0) break;;
   esac
-  case x$1 in
-    x-help|x-hel|x-he|x-h|x--help|x--hel|x--he|x--h)
+  case X$1 in
+    X-help|X-hel|X-he|X-h|X--help|X--hel|X--he|X--h)
       shift; command=help;;
-    x-list|x-lis|x-li|x-l|x--list|x--lis|x--li|x--l)
+    X-list|X-lis|X-li|X-l|X--list|X--lis|X--li|X--l)
       shift; command=list;;
-    x-k|x--insecure)
+    X-k|X--insecure)
       shift; insecure=true;;
-    x-prefix|x-prefi|x-pref|x-pre|x-pr|x-p|x--prefix|x--prefi|x--pref|x--pre|x--pr|x--p)
-      case x$# in
-        x1) echo "missing argument to $1" >&2; exit 1;;
+    X-prefix|X-prefi|X-pref|X-pre|X-pr|X-p|X--prefix|X--prefi|X--pref|X--pre|X--pr|X--p)
+      case X$# in
+        X1) echo "missing argument to $1" >&2; exit 1;;
       esac
       shift; prefix=$1; shift;;
-    x--prefix=*|x--prefi=*|x--pref=*|x--pre=*|x--pr=*|x--p=*)
-      prefix=`expr "x$1" : 'x--p[^=]*=\(.*\)'`; shift;;
-    x--)
+    X--prefix=*|X--prefi=*|X--pref=*|X--pre=*|X--pr=*|X--p=*)
+      prefix=`expr "X$1" : 'X--p[^=]*\(=.*\)' | sed 's/^.//'`
+      shift;;
+    X--)
       shift; break;;
-    x-*)
+    X-*)
       echo "unrecognized option $1" >&2; exit 1;;
     *)
       break;;
   esac
 done
 
-case x$command in
-  xhelp)
+case X$command in
+  Xhelp)
     cat <<EOH
 $0 --help
 $0 --list
 $0 [--insecure] --prefix=PREFIX PACKAGE...
 EOH
     exit;;
-  xlist)
+  Xlist)
     for package in lua51 lua52 lua53 luajit luarocks vim autoconf automake libtool screen tig zeromq
     do
       package_version=`"dromozoa_package_version_$package"`
@@ -222,39 +123,157 @@ EOH
     exit;;
 esac
 
-case x$prefix in
-  x) echo "prefix is unset or null" >&2; exit 1;;
+case X$prefix in
+  X) echo "prefix is unset or null" >&2; exit 1;;
 esac
 mkdir -p "$prefix"
 prefix=`(cd "$prefix" && pwd)`
 
-case x$PATH in
-  x) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
+case X$PATH in
+  X) PATH=$prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin;;
   *) PATH=$prefix/bin:$PATH;;
 esac
-case x$CPPFLAGS in
-  x) CPPFLAGS="-I$prefix/include";;
+case X$CPPFLAGS in
+  X) CPPFLAGS="-I$prefix/include";;
   *) CPPFLAGS="-I$prefix/include $CPPFLAGS";;
 esac
-case x`uname` in
-  xDarwin)
-    case x$LDFLAGS in
-      x) LDFLAGS="-L$prefix/lib";;
+case X`uname` in
+  XDarwin)
+    case X$LDFLAGS in
+      X) LDFLAGS="-L$prefix/lib";;
       *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
     esac;;
   *)
-    case x$LDFLAGS in
-      x) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib";;
+    case X$LDFLAGS in
+      X) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib";;
       *) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib $LDFLAGS";;
     esac;;
 esac
 export PATH CPPFLAGS LDFLAGS
 
+dromozoa_basename() {
+  expr  "X$1" : 'X.*\(/[^/][^/]*\)/*$' \
+    '|' "X$1" : '\(X//\)$' \
+    '|' "X$1" : '\(X/\)' \
+    '|' "X$1" | sed 's/^.//'
+}
+
+dromozoa_dirname() {
+  expr  "X$1" : '\(X.*[^/]\)//*[^/][^/]*/*$' \
+    '|' "X$1" : '\(X//\)[^/]' \
+    '|' "X$1" : '\(X//\)$' \
+    '|' "X$1" : '\(X/\)' \
+    '|' X. | sed 's/^.//'
+}
+
+dromozoa_search() {
+  path=:$PATH
+  while :
+  do
+    i=`expr "X$path" : 'X\(:[^:]*\)' | sed 's/^.//'`
+    case X$i in
+      X) i=.;;
+    esac
+    for j in "$@"
+    do
+      if test -x "$i/$j"
+      then
+        i=`(cd "$i" && pwd)`
+        echo "$i/$j"
+        return
+      fi
+    done
+    path=`expr "X$path" : 'X:[^:]*\(:.*\)' '|' X`
+    case X$path in
+      XX) return;;
+    esac
+  done
+}
+
+dromozoa_version_lua() {
+  name=_dromozoa_version_lua
+  cat <<EOH >"$name.c"
+#include <stdio.h>
+#include <string.h>
+#include <lua.h>
+
+int main(int ac, char* av[]) {
+  const char* p = LUA_RELEASE;
+  if (p && strncmp(p, "Lua ", 4) == 0) {
+    printf("%s\n", p + 4);
+  }
+  return 0;
+}
+EOH
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -llua -o "$name" >/dev/null 2>&1
+  then
+    "./$name"
+  fi
+}
+
+dromozoa_version_zeromq() {
+  name=_dromozoa_version_zeromq
+  cat <<EOH >"$name.c"
+#include <stdio.h>
+#include <zmq.h>
+
+int main(int ac, char* av[]) {
+  int major = 0;
+  int minor = 0;
+  int patch = 0;
+  zmq_version(&major, &minor, &patch);
+  printf("%d.%d.%d\n", major, minor, patch);
+  return 0;
+}
+EOH
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
+  then
+    "./$name"
+  fi
+}
+
+dromozoa_version() {
+  case X$1 in
+    Xlua)
+      dromozoa_version_lua;;
+    Xscreen)
+      result=`"$@" 2>&1 || :`
+      major=`expr "X$result" : 'X.* version\( [0-9][0-9]*\)' | sed 's/^.//'`
+      minor=`expr "X$result" : 'X.* version [0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.//'`
+      patch=`expr "X$result" : 'X.* version [0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.//'`
+      case X$major in
+        X) ;;
+        *) printf '%d.%d.%d' "$major" "$minor" "$patch";;
+      esac;;
+    Xvim)
+      if "$@" >_dromozoa_version_vim 2>&1
+      then
+        result=`sed -n 1p <_dromozoa_version_vim`
+        version=`expr "X$result" : 'X.*\( [0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
+        result=`sed -n '/^Included patches:/p' <_dromozoa_version_vim`
+        patch=`expr "X$result" : 'X.*\([^0-9][0-9][0-9]*\)$' | sed 's/^.//'`
+        case X$patch in
+          X) echo "$version";;
+          *) echo "$version.$patch";;
+        esac
+      fi;;
+    Xzeromq)
+      dromozoa_version_zeromq;;
+    *)
+      if "$@" >"_dromozoa_version_$1" 2>&1
+      then
+        result=`cat "_dromozoa_version_$1"`
+        result=`expr "X$result" : 'X.*\([ v][0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
+        echo "$result"
+      fi;;
+  esac
+}
+
 dromozoa_require() {
   printf "checking version of $1..."
   current_version=`dromozoa_version "$@"`
-  case x$current_version in
-    x) echo " not found, error"; exit 1;;
+  case X$current_version in
+    X) echo " not found, error"; exit 1;;
   esac
   echo " $current_version, ok"
 }
@@ -265,23 +284,23 @@ dromozoa_check() {
   shift
   printf "checking version of $1..."
   current_version=`dromozoa_version "$@"`
-  case x$current_version in
-    x) current_version="not found";;
+  case X$current_version in
+    X) current_version="not found";;
   esac
-  case x$current_version in
-    x$package_version)
-      echo " $current_version, skip"
-      check=true;;
-    *)
-      echo " $current_version, install"
-      check=false;;
-  esac
+  if test "X$current_version" = "X$package_version"
+  then
+    echo " $current_version, skip"
+    check=true
+  else
+    echo " $current_version, install"
+    check=false
+  fi
 }
 
 dromozoa_curl() {
   echo "fetching $1..."
-  case x$insecure in
-    xtrue) curl -fkLO "$1";;
+  case X$insecure in
+    Xtrue) curl -fkLO "$1";;
     *) curl -fLO "$1";;
   esac
 }
@@ -290,11 +309,12 @@ dromozoa_prepare() {
   dromozoa_curl "$1"
   filename=`dromozoa_basename "$1"`
   echo "extracting $filename..."
-  case x$filename in
-    x*.tar.gz) gunzip -cd "$filename" | tar xf -;;
+  case X$filename in
+    X*.tar.gz) gunzip -cd "$filename" | tar xf -;;
+    *) echo "could not extract $filename" >&2; exit 1;;
   esac
-  case x$2 in
-    x) dirname=`expr "x$filename" : 'x\(.*\)\.tar'`;;
+  case X$2 in
+    X) dirname=`expr "X$filename" : '\(X.*\)\.tar' | sed 's/^.//'`;;
     *) dirname=$2;;
   esac
   echo "building in $dirname..."
@@ -313,8 +333,8 @@ dromozoa_package_gnu() {
   package_version=$2
   package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
   dromozoa_check "$package_version" "$package" --version
-  case x$check in
-    xtrue) return;;
+  case X$check in
+    Xtrue) return;;
   esac
   dromozoa_prepare "$package_url"
   dromozoa_build
@@ -325,9 +345,9 @@ dromozoa_package_lua() {
   package=$1
   package_version=$2
   package_url="https://dromozoa.s3.amazonaws.com/pub/dromozoa-autotoolize/$autotoolize_version/lua-$package_version.dromozoa-autotoolize-$autotoolize_version.tar.gz"
-  dromozoa_check "$package_version" lua -v
-  case x$check in
-    xtrue) return;;
+  dromozoa_check "$package_version" lua
+  case X$check in
+    Xtrue) return;;
   esac
   dromozoa_prepare "$package_url"
   dromozoa_build
@@ -350,8 +370,8 @@ dromozoa_package_luajit() {
   package_version=$2
   package_url="https://luajit.org/download/LuaJIT-$package_version.tar.gz"
   dromozoa_check "$package_version" luajit -v
-  case x$check in
-    xtrue) return;;
+  case X$check in
+    Xtrue) return;;
   esac
   dromozoa_prepare "$package_url"
   make PREFIX="$prefix"
@@ -359,20 +379,19 @@ dromozoa_package_luajit() {
 }
 
 dromozoa_package_luarocks() {
+  dromozoa_require lua
   package=$1
   package_version=$2
   package_url=https://luarocks.github.io/luarocks/releases/luarocks-$package_version.tar.gz
   dromozoa_check "$package_version" luarocks --version
-  case x$check in
-    xtrue) return;;
+  case X$check in
+    Xtrue) return;;
   esac
   dromozoa_prepare "$package_url"
-  if test -x "$prefix/bin/lua"
-  then
-    ./configure --prefix="$prefix" --with-lua="$prefix"
-  else
-    ./configure --prefix="$prefix"
-  fi
+  lua=`dromozoa_search lua`
+  lua_prefix=`dromozoa_dirname "$lua"`
+  lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/[^/]*bin$' '|' "X$lua_prefix" | sed 's/^.//'`
+  ./configure --prefix="$prefix" --with-lua="$lua_prefix"
   make bootstrap
 }
 
@@ -381,34 +400,35 @@ dromozoa_package_vim() {
   package_version=$2
   package_url=https://github.com/vim/vim/archive/v$package_version.tar.gz
   dromozoa_check "$package_version" vim --version
-  case x$check in
-    xtrue) return;;
+  case X$check in
+    Xtrue) return;;
   esac
   dromozoa_prepare "$package_url" "vim-$package_version"
 
+  enable_luainterp=--enable-luainterp=no
+  with_lua_prefix=--without-lua-prefix
+  with_luajit=--without-luajit
+
   lua=`dromozoa_search luajit lua`
-  case x$lua in
-    x)
-      enable_luainterp=--enable-luainterp=no
-      with_lua_prefix=--without-lua-prefix;;
+  case X$lua in
+    X) ;;
     *)
       lua_prefix=`dromozoa_dirname "$lua"`
-      lua_prefix=`expr "x$lua_prefix" : 'x\(.*\)/bin$' '|' "x$lua_prefix" : 'x\(.*\)'`
+      lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/[^/]*bin$' '|' "X$lua_prefix" | sed 's/^.//'`
       enable_luainterp=--enable-luainterp=yes
-      with_lua_prefix="--with-lua-prefix=$lua_prefix"
-      case x$CFLAGS in
-        x) CFLAGS="-std=gnu99";;
+      with_lua_prefix=--with-lua-prefix=$lua_prefix
+      case X$lua in
+        */luajit) with_luajit=--with-luajit;;
+      esac
+      case X$CFLAGS in
+        X) CFLAGS="-std=gnu99";;
         *) CFLAGS="-std=gnu99 $CFLAGS";;
       esac
-      case x`uname` in
-        xDarwin) ;;
+      case X`uname` in
+        XDarwin) ;;
         *) LDFLAGS="-Wl,-rpath -Wl,$lua_prefix/lib $LDFLAGS";;
       esac
       export CFLAGS LDFLAGS;;
-  esac
-  case x$lua in
-    */luajit) with_luajit=--with-luajit;;
-    *) with_luajit=--without-luajit;;
   esac
 
   dromozoa_build \
@@ -442,8 +462,8 @@ dromozoa_package_screen() {
   package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
   patch_url=https://github.com/dromozoa/dromozoa-boot/raw/master/$package-$package_version.patch
   dromozoa_check "$package_version" screen --version
-  case x$check in
-    xtrue) return;;
+  case X$check in
+    Xtrue) return;;
   esac
   dromozoa_curl "$patch_url"
   patch_filename=`dromozoa_basename "$patch_url"`
@@ -458,8 +478,8 @@ dromozoa_package_tig() {
   package_version=$2
   package_url=https://github.com/jonas/tig/releases/download/tig-$package_version/tig-$package_version.tar.gz
   dromozoa_check "$package_version" tig --version
-  case x$check in
-    xtrue) return;;
+  case X$check in
+    Xtrue) return;;
   esac
   dromozoa_prepare "$package_url"
   dromozoa_build
@@ -470,19 +490,19 @@ dromozoa_package_zeromq() {
   package_version=$2
   package_url=https://github.com/zeromq/libzmq/releases/download/v$package_version/zeromq-$package_version.tar.gz
   dromozoa_check "$package_version" zeromq
-  case x$check in
-    xtrue) return;;
+  case X$check in
+    Xtrue) return;;
   esac
   dromozoa_prepare "$package_url"
   dromozoa_build
 }
 
-case x$TMPDIR in
-  x) TMPDIR=/tmp;;
+case X$TMPDIR in
+  X) TMPDIR=/tmp;;
 esac
 tmp=`(umask 077 && mktemp -d "$TMPDIR/dromozoa-XXXXXX" 2>/dev/null || :)`
-case x$tmp in
-  x) tmp=$TMPDIR/dromozoa-$$-$RANDOM; (umask 077 && mkdir "$tmp");;
+case X$tmp in
+  X) tmp=$TMPDIR/dromozoa-$$-$RANDOM; (umask 077 && mkdir "$tmp");;
 esac
 cd "$tmp"
 tmp=`pwd`
