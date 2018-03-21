@@ -47,7 +47,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 8.0.1617
+  echo 8.0.1626
 }
 
 dromozoa_package_version_autoconf() {
