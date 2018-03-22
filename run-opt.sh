@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with dromozoa-boot.  If not, see <http://www.gnu.org/licenses/>.
 
-./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool screen tig zeromq
+./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool screen tig zeromq hook
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks vim
