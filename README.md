@@ -45,6 +45,7 @@ chmod 755 dromozoa-boot
 * [screen](https://ftp.gnu.org/gnu/screen/)
 * [tig](https://github.com/jonas/tig/releases)
 * [zeromq](http://zeromq.org/intro:get-the-software)
+* [hook](https://github.com/dromozoa/dromozoa-hook/releases/)
 
 ## Prerequisites: RHEL 6 and derivatives
 
