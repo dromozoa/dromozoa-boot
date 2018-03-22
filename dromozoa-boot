@@ -264,7 +264,7 @@ dromozoa_version() {
     Xzeromq)
       dromozoa_version_zeromq;;
     Xdromozoa-hook-version)
-      "$@";;
+      "$@" 2>/dev/null || :;;
     *)
       if "$@" >"_dromozoa_version_$1" 2>&1
       then
