@@ -47,7 +47,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 8.0.1626
+  echo 8.0.1645
 }
 
 dromozoa_package_version_autoconf() {
@@ -75,7 +75,7 @@ dromozoa_package_version_zeromq() {
 }
 
 dromozoa_package_version_hook() {
-  echo 1.4
+  echo 1.5
 }
 
 command=install
@@ -396,7 +396,7 @@ dromozoa_package_luarocks() {
   dromozoa_prepare "$package_url"
   lua=`dromozoa_search lua`
   lua_prefix=`dromozoa_dirname "$lua"`
-  lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/[^/]*bin$' '|' "X$lua_prefix" | sed 's/^.//'`
+  lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/bin$' '|' "X$lua_prefix" | sed 's/^.//'`
   ./configure --prefix="$prefix" --with-lua="$lua_prefix"
   make bootstrap
 }
@@ -420,7 +420,7 @@ dromozoa_package_vim() {
     X) ;;
     *)
       lua_prefix=`dromozoa_dirname "$lua"`
-      lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/[^/]*bin$' '|' "X$lua_prefix" | sed 's/^.//'`
+      lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/bin$' '|' "X$lua_prefix" | sed 's/^.//'`
       enable_luainterp=--enable-luainterp=yes
       with_lua_prefix=--with-lua-prefix=$lua_prefix
       case X$lua in

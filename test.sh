@@ -98,7 +98,7 @@ case X$result in
 esac
 # lua_prefix=/var/tmp/prefix/bin
 lua_prefix=`dromozoa_dirname "$result"`
-lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/[^/]*bin$' '|' "X$lua_prefix" | sed 's/^.//'`
+lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/bin$' '|' "X$lua_prefix" | sed 's/^.//'`
 echo "$lua_prefix"
 
 result=`dromozoa_search vim`
