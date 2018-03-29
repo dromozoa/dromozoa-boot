@@ -47,7 +47,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 8.0.1647
+  echo 8.0.1648
 }
 
 dromozoa_package_version_autoconf() {
@@ -75,7 +75,7 @@ dromozoa_package_version_zeromq() {
 }
 
 dromozoa_package_version_hook() {
-  echo 1.6
+  echo 1.7
 }
 
 command=install
