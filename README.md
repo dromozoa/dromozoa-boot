@@ -24,7 +24,7 @@ chmod 755 dromozoa-boot
 ### install to $HOME/prefixes/dromozoa
 
 ```
-./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" autoconf automake libtool screen tig zeromq hook
+./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" autoconf automake libtool screen tig zeromq libpng hook
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa51" lua51 luajit luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa52" lua52 luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa53" lua53 luarocks vim
@@ -45,19 +45,20 @@ chmod 755 dromozoa-boot
 * [screen](https://ftp.gnu.org/gnu/screen/)
 * [tig](https://github.com/jonas/tig/releases)
 * [zeromq](http://zeromq.org/intro:get-the-software)
+* [libpng](http://www.libpng.org/pub/png/libpng.html)
 * [dromozoa](https://github.com/dromozoa/)
     * [hook](https://github.com/dromozoa/dromozoa-hook/releases/)
 
 ## Prerequisites: RHEL 6 and derivatives
 
 ```
-sudo yum install gcc gcc-c++ patch zip unzip ncurses-devel readline-devel
+sudo yum install gcc gcc-c++ patch zip unzip ncurses-devel readline-devel zlib-devel
 ```
 
 ## Prerequisites: RHEL 7 and derivatives
 
 ```
-sudo yum install gcc gcc-c++ patch zip unzip ncurses-devel readline-devel
+sudo yum install gcc gcc-c++ patch zip unzip ncurses-devel readline-devel zlib-devel
 ```
 
 ### autoconf
@@ -75,7 +76,7 @@ sudo yum install perl-Thread-Queue
 ## Prerequisites: Amazon Linux 2
 
 ```
-sudo yum install gcc gcc-c++ patch ncurses-devel readline-devel
+sudo yum install gcc gcc-c++ patch ncurses-devel readline-devel zlib-devel
 ```
 
 ### autoconf
