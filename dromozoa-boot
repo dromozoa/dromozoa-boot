@@ -47,7 +47,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 8.0.1803
+  echo 8.0.1813
 }
 
 dromozoa_package_version_autoconf() {
@@ -72,6 +72,10 @@ dromozoa_package_version_tig() {
 
 dromozoa_package_version_zeromq() {
   echo 4.2.3
+}
+
+dromozoa_package_version_libjpeg() {
+  echo 9c
 }
 
 dromozoa_package_version_libpng() {
@@ -123,7 +127,7 @@ $0 [--insecure] --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   Xlist)
-    for package in lua51 lua52 lua53 luajit luarocks vim autoconf automake libtool screen tig zeromq libpng hook
+    for package in lua51 lua52 lua53 luajit luarocks vim autoconf automake libtool screen tig zeromq libjpeg libpng hook
     do
       package_version=`"dromozoa_package_version_$package"`
       echo "$package $package_version"
@@ -240,6 +244,36 @@ EOH
   fi
 }
 
+dromozoa_version_libjpeg() {
+  name=_dromozoa_version_libjpeg
+  cat <<EOH >"$name.c"
+#include <stdio.h>
+#include <jpeglib.h>
+
+int main(int ac, char* av[]) {
+#ifndef LIBJPEG_TURBO_VERSION
+#if defined(JPEG_LIB_VERSION_MAJOR) && defined(JPEG_LIB_VERSION_MINOR)
+  int major = JPEG_LIB_VERSION_MAJOR;
+  int minor = JPEG_LIB_VERSION_MINOR;
+#else
+  int major = JPEG_LIB_VERSION / 10;
+  int minor = JPEG_LIB_VERSION % 10;
+#endif
+  if (minor == 0) {
+    printf("%d\n", major);
+  } else {
+    printf("%d%c\n", major, 'a' + minor - 1);
+  }
+#endif
+  return 0;
+}
+EOH
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -ljpeg -o "$name" >/dev/null 2>&1
+  then
+    "./$name"
+  fi
+}
+
 dromozoa_version_libpng() {
   name=_dromozoa_version_libpng
   cat <<EOH >"$name.c"
@@ -251,7 +285,7 @@ int main(int ac, char* av[]) {
   return 0;
 }
 EOH
-  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lpng -o "$name" >/dev/null 2>&1
   then
     "./$name"
   fi
@@ -284,6 +318,8 @@ dromozoa_version() {
       fi;;
     Xzeromq)
       dromozoa_version_zeromq;;
+    Xlibjpeg)
+      dromozoa_version_libjpeg;;
     Xlibpng)
       dromozoa_version_libpng;;
     Xdromozoa-hook-version)
@@ -526,10 +562,22 @@ dromozoa_package_zeromq() {
   dromozoa_build
 }
 
+dromozoa_package_libjpeg() {
+  package=$1
+  package_version=$2
+  package_url=http://www.ijg.org/files/jpegsrc.v$package_version.tar.gz
+  dromozoa_check "$package_version" libjpeg
+  case X$check in
+    Xtrue) return;;
+  esac
+  dromozoa_prepare "$package_url" jpeg-9c
+  dromozoa_build
+}
+
 dromozoa_package_libpng() {
   package=$1
   package_version=$2
-  package_url=https://ftp-osl.osuosl.org/pub/libpng/src/libpng16/libpng-1.6.34.tar.gz
+  package_url=https://ftp-osl.osuosl.org/pub/libpng/src/libpng16/libpng-$package_version.tar.gz
   dromozoa_check "$package_version" libpng
   case X$check in
     Xtrue) return;;
