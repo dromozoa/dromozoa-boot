@@ -47,7 +47,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 8.0.1842
+  echo 8.1.0010
 }
 
 dromozoa_package_version_autoconf() {
@@ -312,8 +312,8 @@ dromozoa_version() {
         result=`sed -n '/^Included patches:/p' <_dromozoa_version_vim`
         patch=`expr "X$result" : 'X.*\([^0-9][0-9][0-9]*\)$' | sed 's/^.//'`
         case X$patch in
-          X) echo "$version";;
-          *) echo "$version.$patch";;
+          X) printf '%s' "$version";;
+          *) printf '%s.%04d' "$version" "$patch";;
         esac
       fi;;
     Xzeromq)
