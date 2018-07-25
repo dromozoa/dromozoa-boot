@@ -1,0 +1,12 @@
+diff -uprN luarocks-3.0.0/src/luarocks/core/cfg.lua luarocks-3.0.0-modified/src/luarocks/core/cfg.lua
+--- luarocks-3.0.0/src/luarocks/core/cfg.lua	2018-07-20 05:42:19.000000000 +0900
++++ luarocks-3.0.0-modified/src/luarocks/core/cfg.lua	2018-07-25 20:56:11.000000000 +0900
+@@ -536,6 +536,8 @@ function cfg.init(lua_data, project_dir,
+       hardcoded = {}
+    end
+ 
++   local arg = arg or {}
++
+    local lua_version = lua_data.lua_version or hardcoded.LUA_VERSION or _VERSION:sub(5)
+    local luajit_version = lua_data.luajit_version or hardcoded.LUAJIT_VERSION or (jit and jit.version:sub(8))
+    local lua_interpreter = lua_data.lua_interpreter or hardcoded.LUA_INTERPRETER or (arg[-1] and arg[-1]:gsub(".*[\\/]", "")) or (is_windows and "lua.exe" or "lua")

@@ -35,7 +35,7 @@ dromozoa_package_version_lua52() {
 }
 
 dromozoa_package_version_lua53() {
-  echo 5.3.4
+  echo 5.3.5
 }
 
 dromozoa_package_version_luajit() {
@@ -43,11 +43,11 @@ dromozoa_package_version_luajit() {
 }
 
 dromozoa_package_version_luarocks() {
-  echo 2.4.4
+  echo 3.0.0
 }
 
 dromozoa_package_version_vim() {
-  echo 8.1.0115
+  echo 8.1.0209
 }
 
 dromozoa_package_version_autoconf() {
@@ -67,7 +67,7 @@ dromozoa_package_version_screen() {
 }
 
 dromozoa_package_version_tig() {
-  echo 2.3.3
+  echo 2.4.0
 }
 
 dromozoa_package_version_zeromq() {
@@ -79,7 +79,7 @@ dromozoa_package_version_libjpeg() {
 }
 
 dromozoa_package_version_libpng() {
-  echo 1.6.34
+  echo 1.6.35
 }
 
 dromozoa_package_version_hook() {
@@ -316,6 +316,13 @@ dromozoa_version() {
           *) printf '%s.%04d' "$version" "$patch";;
         esac
       fi;;
+    Xtig)
+      if "$@" >"_dromozoa_version_tig" 2>&1
+      then
+        result=`cat "_dromozoa_version_tig"`
+        result=`expr "X$result" : 'Xtig version\( [0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
+        echo "$result"
+      fi;;
     Xzeromq)
       dromozoa_version_zeromq;;
     Xlibjpeg)
@@ -447,12 +454,16 @@ dromozoa_package_luarocks() {
   dromozoa_require lua
   package=$1
   package_version=$2
-  package_url=https://luarocks.github.io/luarocks/releases/luarocks-$package_version.tar.gz
+  package_url=https://luarocks.github.io/luarocks/releases/$package-$package_version.tar.gz
+  patch_url=https://github.com/dromozoa/dromozoa-boot/raw/master/$package-$package_version.patch
   dromozoa_check "$package_version" luarocks --version
   case X$check in
     Xtrue) return;;
   esac
+  dromozoa_curl "$patch_url"
+  patch_filename=`dromozoa_basename "$patch_url"`
   dromozoa_prepare "$package_url"
+  patch -p1 <"../$patch_filename"
   lua=`dromozoa_search lua`
   lua_prefix=`dromozoa_dirname "$lua"`
   lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/bin$' '|' "X$lua_prefix" | sed 's/^.//'`
@@ -577,7 +588,7 @@ dromozoa_package_libjpeg() {
 dromozoa_package_libpng() {
   package=$1
   package_version=$2
-  package_url=https://ftp-osl.osuosl.org/pub/libpng/src/libpng16/libpng-$package_version.tar.gz
+  package_url=https://download.sourceforge.net/libpng/libpng-$package_version.tar.gz
   dromozoa_check "$package_version" libpng
   case X$check in
     Xtrue) return;;
