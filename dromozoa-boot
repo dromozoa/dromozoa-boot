@@ -316,6 +316,13 @@ dromozoa_version() {
           *) printf '%s.%04d' "$version" "$patch";;
         esac
       fi;;
+    Xtig)
+      if "$@" >"_dromozoa_version_tig" 2>&1
+      then
+        result=`cat "_dromozoa_version_tig"`
+        result=`expr "X$result" : 'Xtig version\( [0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
+        echo "$result"
+      fi;;
     Xzeromq)
       dromozoa_version_zeromq;;
     Xlibjpeg)
