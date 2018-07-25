@@ -120,3 +120,7 @@ done
 
 PATH=$path_save
 export PATH
+
+result=`printf 'tig version 2.4.0\nncurses version 5.7.20081102\n'`
+result=`expr "X$result" : 'X.*\([ v][0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
+echo "$result"

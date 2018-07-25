@@ -15,7 +15,7 @@ chmod 755 dromozoa-boot
 ```
 (cd /opt && sudo mkdir -p dromozoa dromozoa51 dromozoa52 dromozoa53)
 (cd /opt && sudo chown `id -u`:`id -g` dromozoa dromozoa51 dromozoa52 dromozoa53)
-./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool screen tig zeromq hook
+./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool screen tig zeromq libjpeg libpng hook
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks vim
@@ -24,7 +24,7 @@ chmod 755 dromozoa-boot
 ### install to $HOME/prefixes/dromozoa
 
 ```
-./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" autoconf automake libtool screen tig zeromq libpng hook
+./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" autoconf automake libtool screen tig zeromq libjpeg libpng hook
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa51" lua51 luajit luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa52" lua52 luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa53" lua53 luarocks vim
