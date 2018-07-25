@@ -35,7 +35,7 @@ dromozoa_package_version_lua52() {
 }
 
 dromozoa_package_version_lua53() {
-  echo 5.3.4
+  echo 5.3.5
 }
 
 dromozoa_package_version_luajit() {
@@ -43,11 +43,11 @@ dromozoa_package_version_luajit() {
 }
 
 dromozoa_package_version_luarocks() {
-  echo 2.4.4
+  echo 3.0.0
 }
 
 dromozoa_package_version_vim() {
-  echo 8.1.0115
+  echo 8.1.0209
 }
 
 dromozoa_package_version_autoconf() {
@@ -67,7 +67,7 @@ dromozoa_package_version_screen() {
 }
 
 dromozoa_package_version_tig() {
-  echo 2.3.3
+  echo 2.4.0
 }
 
 dromozoa_package_version_zeromq() {
@@ -79,7 +79,7 @@ dromozoa_package_version_libjpeg() {
 }
 
 dromozoa_package_version_libpng() {
-  echo 1.6.34
+  echo 1.6.35
 }
 
 dromozoa_package_version_hook() {
@@ -577,7 +577,7 @@ dromozoa_package_libjpeg() {
 dromozoa_package_libpng() {
   package=$1
   package_version=$2
-  package_url=https://ftp-osl.osuosl.org/pub/libpng/src/libpng16/libpng-$package_version.tar.gz
+  package_url=https://download.sourceforge.net/libpng/libpng-$package_version.tar.gz
   dromozoa_check "$package_version" libpng
   case X$check in
     Xtrue) return;;
