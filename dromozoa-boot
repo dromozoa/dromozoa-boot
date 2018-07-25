@@ -454,12 +454,16 @@ dromozoa_package_luarocks() {
   dromozoa_require lua
   package=$1
   package_version=$2
-  package_url=https://luarocks.github.io/luarocks/releases/luarocks-$package_version.tar.gz
+  package_url=https://luarocks.github.io/luarocks/releases/$package-$package_version.tar.gz
+  patch_url=https://github.com/dromozoa/dromozoa-boot/raw/master/$package-$package_version.patch
   dromozoa_check "$package_version" luarocks --version
   case X$check in
     Xtrue) return;;
   esac
+  dromozoa_curl "$patch_url"
+  patch_filename=`dromozoa_basename "$patch_url"`
   dromozoa_prepare "$package_url"
+  patch -p1 <"../$patch_filename"
   lua=`dromozoa_search lua`
   lua_prefix=`dromozoa_dirname "$lua"`
   lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/bin$' '|' "X$lua_prefix" | sed 's/^.//'`
