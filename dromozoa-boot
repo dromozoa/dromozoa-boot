@@ -47,7 +47,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 8.1.0209
+  echo 8.1.0213
 }
 
 dromozoa_package_version_autoconf() {
@@ -588,7 +588,7 @@ dromozoa_package_libjpeg() {
 dromozoa_package_libpng() {
   package=$1
   package_version=$2
-  package_url=https://download.sourceforge.net/libpng/libpng-$package_version.tar.gz
+  package_url=https://jaist.dl.sourceforge.net/project/libpng/libpng16/$package_version/libpng-$package_version.tar.gz
   dromozoa_check "$package_version" libpng
   case X$check in
     Xtrue) return;;
