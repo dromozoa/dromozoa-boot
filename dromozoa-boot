@@ -43,11 +43,11 @@ dromozoa_package_version_luajit() {
 }
 
 dromozoa_package_version_luarocks() {
-  echo 3.0.2
+  echo 3.0.3
 }
 
 dromozoa_package_version_vim() {
-  echo 8.1.0359
+  echo 8.1.0408
 }
 
 dromozoa_package_version_autoconf() {
