@@ -47,7 +47,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 8.1.0436
+  echo 8.1.0451
 }
 
 dromozoa_package_version_autoconf() {
@@ -71,7 +71,7 @@ dromozoa_package_version_tig() {
 }
 
 dromozoa_package_version_zeromq() {
-  echo 4.2.3
+  echo 4.2.5
 }
 
 dromozoa_package_version_libjpeg() {
