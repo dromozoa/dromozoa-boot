@@ -103,3 +103,9 @@ sudo apt-get install libncursesw5-dev libreadline-dev
 ```
 sudo apt-get install m4
 ```
+
+## Prerequisites: Debian 8
+
+```
+sudo apt-get install gcc g++ curl make unzip zlib1g-dev libncursesw5-dev libreadline-dev
+```
