@@ -44,7 +44,7 @@ chmod 755 dromozoa-boot
 * [libtool](https://ftp.gnu.org/gnu/libtool/)
 * [screen](https://ftp.gnu.org/gnu/screen/)
 * [tig](https://github.com/jonas/tig/releases)
-* [zeromq](http://zeromq.org/intro:get-the-software)
+* [zeromq](https://github.com/zeromq/libzmq/releases)
 * [libjpeg](http://www.ijg.org/)
 * [libpng](http://www.libpng.org/pub/png/libpng.html)
 * [dromozoa](https://github.com/dromozoa/)
