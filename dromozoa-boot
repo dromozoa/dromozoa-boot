@@ -1,6 +1,6 @@
 #! /bin/sh -e
 
-# Copyright (C) 2016-2018 Tomoyuki Fujimori <moyu@dromozoa.com>
+# Copyright (C) 2016-2019 Tomoyuki Fujimori <moyu@dromozoa.com>
 #
 # This file is part of dromozoa-boot.
 #
@@ -43,11 +43,11 @@ dromozoa_package_version_luajit() {
 }
 
 dromozoa_package_version_luarocks() {
-  echo 3.0.4
+  echo 3.1.3
 }
 
 dromozoa_package_version_vim() {
-  echo 8.1.1006
+  echo 8.1.1486
 }
 
 dromozoa_package_version_autoconf() {
@@ -79,7 +79,7 @@ dromozoa_package_version_libjpeg() {
 }
 
 dromozoa_package_version_libpng() {
-  echo 1.6.36
+  echo 1.6.37
 }
 
 dromozoa_package_version_hook() {
