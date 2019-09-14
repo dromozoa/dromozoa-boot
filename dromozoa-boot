@@ -43,11 +43,11 @@ dromozoa_package_version_luajit() {
 }
 
 dromozoa_package_version_luarocks() {
-  echo 3.1.3
+  echo 3.2.1
 }
 
 dromozoa_package_version_vim() {
-  echo 8.1.1817
+  echo 8.1.2027
 }
 
 dromozoa_package_version_autoconf() {
@@ -464,7 +464,8 @@ dromozoa_package_luarocks() {
   lua_prefix=`dromozoa_dirname "$lua"`
   lua_prefix=`expr "X$lua_prefix" : '\(X.*\)/bin$' '|' "X$lua_prefix" | sed 's/^.//'`
   ./configure --prefix="$prefix" --with-lua="$lua_prefix"
-  make bootstrap
+  make
+  make install
 }
 
 dromozoa_package_vim() {
