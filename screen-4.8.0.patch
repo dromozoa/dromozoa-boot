@@ -1,0 +1,27 @@
+diff -uprN screen-4.8.0/ansi.c screen-4.8.0-modified/ansi.c
+--- screen-4.8.0/ansi.c	2020-02-06 05:09:38.000000000 +0900
++++ screen-4.8.0-modified/ansi.c	2020-04-20 14:32:24.000000000 +0900
+@@ -728,6 +728,11 @@ register int len;
+ 		      LPutChar(&curr->w_layer, &omc, ox, oy);
+ 		      LGotoPos(&curr->w_layer, curr->w_x, curr->w_y);
+ 		    }
++		  if (curr->w_mbcs)
++		    {
++		      curr->w_mbcs = 0;
++		      curr->w_rend.mbcs = 0;
++		    }
+ 		  break;
+ 		}
+ 	      font = curr->w_rend.font;
+diff -uprN screen-4.8.0/display.c screen-4.8.0-modified/display.c
+--- screen-4.8.0/display.c	2020-02-06 05:09:38.000000000 +0900
++++ screen-4.8.0-modified/display.c	2020-04-20 14:32:24.000000000 +0900
+@@ -613,7 +613,7 @@ int c;
+ 	    D_x += D_AM ? 1 : -1;
+ 	  D_mbcs = 0;
+ 	}
+-      else if (utf8_isdouble(c))
++      else if (utf8_isdouble(c) || (0xD800 <= c && c <= 0xDFFF))
+ 	{
+ 	  D_mbcs = c;
+ 	  D_x++;

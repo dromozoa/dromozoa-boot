@@ -43,11 +43,11 @@ dromozoa_package_version_luajit() {
 }
 
 dromozoa_package_version_luarocks() {
-  echo 3.2.1
+  echo 3.3.1
 }
 
 dromozoa_package_version_vim() {
-  echo 8.1.2237
+  echo 8.2.0607
 }
 
 dromozoa_package_version_autoconf() {
@@ -55,7 +55,7 @@ dromozoa_package_version_autoconf() {
 }
 
 dromozoa_package_version_automake() {
-  echo 1.16.1
+  echo 1.16.2
 }
 
 dromozoa_package_version_libtool() {
@@ -63,11 +63,11 @@ dromozoa_package_version_libtool() {
 }
 
 dromozoa_package_version_screen() {
-  echo 4.7.0
+  echo 4.8.0
 }
 
 dromozoa_package_version_tig() {
-  echo 2.4.1
+  echo 2.5.1
 }
 
 dromozoa_package_version_zeromq() {
@@ -75,7 +75,7 @@ dromozoa_package_version_zeromq() {
 }
 
 dromozoa_package_version_libjpeg() {
-  echo 9c
+  echo 9d
 }
 
 dromozoa_package_version_libpng() {
@@ -83,7 +83,7 @@ dromozoa_package_version_libpng() {
 }
 
 dromozoa_package_version_hook() {
-  echo 1.10
+  echo 1.11
 }
 
 command=install
