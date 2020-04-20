@@ -297,9 +297,9 @@ dromozoa_version() {
       dromozoa_version_lua;;
     Xscreen)
       result=`"$@" 2>&1 || :`
-      major=`expr "X$result" : 'X.* version\( [0-9][0-9]*\)' | sed 's/^.//'`
-      minor=`expr "X$result" : 'X.* version [0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.//'`
-      patch=`expr "X$result" : 'X.* version [0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.//'`
+      major=`expr "X$result" : 'X.* version\( [0-9][0-9]*\)' | sed 's/^.0*//'`
+      minor=`expr "X$result" : 'X.* version [0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.0*//'`
+      patch=`expr "X$result" : 'X.* version [0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)' | sed 's/^.0*//'`
       case X$major in
         X) ;;
         *) printf '%d.%d.%d' "$major" "$minor" "$patch";;
@@ -578,7 +578,7 @@ dromozoa_package_libjpeg() {
   case X$check in
     Xtrue) return;;
   esac
-  dromozoa_prepare "$package_url" jpeg-9c
+  dromozoa_prepare "$package_url" "jpeg-$package_version"
   dromozoa_build
 }
 
