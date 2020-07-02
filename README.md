@@ -33,9 +33,10 @@ chmod 755 dromozoa-boot
 ## Packages
 
 * [lua](https://www.lua.org/versions.html)
-    * [lua51](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.2%2F)
-    * [lua52](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.2%2F)
-    * [lua53](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.2%2F)
+    * [lua51](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
+    * [lua52](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
+    * [lua53](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
+    * [lua54](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
 * [luajit](https://luajit.org/download.html)
 * [luarocks](https://luarocks.github.io/luarocks/releases/)
 * [vim](https://github.com/vim/vim/releases)

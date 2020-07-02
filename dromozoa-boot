@@ -1,6 +1,6 @@
 #! /bin/sh -e
 
-# Copyright (C) 2016-2019 Tomoyuki Fujimori <moyu@dromozoa.com>
+# Copyright (C) 2016-2020 Tomoyuki Fujimori <moyu@dromozoa.com>
 #
 # This file is part of dromozoa-boot.
 #
@@ -36,6 +36,10 @@ dromozoa_package_version_lua52() {
 
 dromozoa_package_version_lua53() {
   echo 5.3.5
+}
+
+dromozoa_package_version_lua54() {
+  echo 5.4.0
 }
 
 dromozoa_package_version_luajit() {
@@ -127,7 +131,7 @@ $0 [--insecure] --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   Xlist)
-    for package in lua51 lua52 lua53 luajit luarocks vim autoconf automake libtool screen tig zeromq libjpeg libpng hook
+    for package in lua51 lua52 lua53 lua54 luajit luarocks vim autoconf automake libtool screen tig zeromq libjpeg libpng hook
     do
       package_version=`"dromozoa_package_version_$package"`
       echo "$package $package_version"
@@ -413,7 +417,7 @@ dromozoa_package_gnu() {
 }
 
 dromozoa_package_lua() {
-  autotoolize_version=1.2
+  autotoolize_version=1.3
   package=$1
   package_version=$2
   package_url="https://dromozoa.s3.amazonaws.com/pub/dromozoa-autotoolize/$autotoolize_version/lua-$package_version.dromozoa-autotoolize-$autotoolize_version.tar.gz"
@@ -434,6 +438,10 @@ dromozoa_package_lua52() {
 }
 
 dromozoa_package_lua53() {
+  dromozoa_package_lua "$@"
+}
+
+dromozoa_package_lua54() {
   dromozoa_package_lua "$@"
 }
 
