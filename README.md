@@ -13,12 +13,13 @@ chmod 755 dromozoa-boot
 ### install to /opt/dromozoa
 
 ```
-(cd /opt && sudo mkdir -p dromozoa dromozoa51 dromozoa52 dromozoa53)
-(cd /opt && sudo chown `id -u`:`id -g` dromozoa dromozoa51 dromozoa52 dromozoa53)
+(cd /opt && sudo mkdir -p dromozoa dromozoa51 dromozoa52 dromozoa53 dromozoa54)
+(cd /opt && sudo chown `id -u`:`id -g` dromozoa dromozoa51 dromozoa52 dromozoa53 dromozoa54)
 ./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool screen tig zeromq libjpeg libpng hook
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks vim
+./dromozoa-boot --prefix=/opt/dromozoa54 lua54 luarocks vim
 ```
 
 ### install to $HOME/prefixes/dromozoa
@@ -28,14 +29,16 @@ chmod 755 dromozoa-boot
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa51" lua51 luajit luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa52" lua52 luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa53" lua53 luarocks vim
+./dromozoa-boot --prefix="$HOME/prefixes/dromozoa54" lua54 luarocks vim
 ```
 
 ## Packages
 
 * [lua](https://www.lua.org/versions.html)
-    * [lua51](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.1%2F)
-    * [lua52](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.1%2F)
-    * [lua53](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.1%2F)
+    * [lua51](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
+    * [lua52](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
+    * [lua53](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
+    * [lua54](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
 * [luajit](https://luajit.org/download.html)
 * [luarocks](https://luarocks.github.io/luarocks/releases/)
 * [vim](https://github.com/vim/vim/releases)
