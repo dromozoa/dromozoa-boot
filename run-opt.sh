@@ -21,4 +21,4 @@
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks vim
-./dromozoa-boot --prefix=/opt/dromozoa54 lua54 luarocks
+./dromozoa-boot --prefix=/opt/dromozoa54 lua54 luarocks vim
