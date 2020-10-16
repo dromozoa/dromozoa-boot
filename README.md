@@ -55,7 +55,8 @@ chmod 755 dromozoa-boot
 
 ## Workaround: macOS 10.15.7
 
-* use environmental variable `MACOSX_DEPLOYMENT_TARGET` to build LuaJIT.
+* use environmental variable `MACOSX_DEPLOYMENT_TARGET=10.15` to build LuaJIT.
+* use environmental variable `CFLAGS=-Wno-error=implicit-function-declaration` to build screen.
 
 ## Prerequisites: RHEL 6 and derivatives
 
