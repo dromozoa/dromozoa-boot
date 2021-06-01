@@ -15,7 +15,7 @@ chmod 755 dromozoa-boot
 ```
 (cd /opt && sudo mkdir -p dromozoa dromozoa51 dromozoa52 dromozoa53 dromozoa54)
 (cd /opt && sudo chown `id -u`:`id -g` dromozoa dromozoa51 dromozoa52 dromozoa53 dromozoa54)
-./dromozoa-boot --prefix=/opt/dromozoa autoconf automake libtool screen tig zeromq libjpeg libpng hook
+./dromozoa-boot --prefix=/opt/dromozoa m4 autoconf automake libtool screen tig zeromq libjpeg libpng hook
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks vim
@@ -25,7 +25,7 @@ chmod 755 dromozoa-boot
 ### install to $HOME/prefixes/dromozoa
 
 ```
-./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" autoconf automake libtool screen tig zeromq libjpeg libpng hook
+./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" m4 autoconf automake libtool screen tig zeromq libjpeg libpng hook
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa51" lua51 luajit luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa52" lua52 luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa53" lua53 luarocks vim
@@ -42,6 +42,7 @@ chmod 755 dromozoa-boot
 * [luajit](https://luajit.org/download.html)
 * [luarocks](https://luarocks.github.io/luarocks/releases/)
 * [vim](https://github.com/vim/vim/releases)
+* [m4](https://ftp.gnu.org/gnu/m4/)
 * [autoconf](https://ftp.gnu.org/gnu/autoconf/)
 * [automake](https://ftp.gnu.org/gnu/automake/)
 * [libtool](https://ftp.gnu.org/gnu/libtool/)
@@ -95,7 +96,7 @@ sudo yum install gcc gcc-c++ patch ncurses-devel readline-devel zlib-devel
 ### autoconf
 
 ```
-sudo yum install m4 perl-Data-Dumper
+sudo yum install perl-Data-Dumper
 ```
 
 ### automake
@@ -108,12 +109,6 @@ sudo yum install perl-Thread-Queue
 
 ```
 sudo apt-get install libncursesw5-dev libreadline-dev
-```
-
-### autoconf
-
-```
-sudo apt-get install m4
 ```
 
 ## Prerequisites: Debian 8
