@@ -96,6 +96,7 @@ dromozoa_package_version_hook() {
 
 command=install
 insecure=false
+no_check=false
 prefix=
 while :
 do
@@ -109,6 +110,8 @@ do
       shift; command=list;;
     X-k|X--insecure)
       shift; insecure=true;;
+    X-n|X--no-check)
+      shift; no_check=true;;
     X-prefix|X-prefi|X-pref|X-pre|X-pr|X-p|X--prefix|X--prefi|X--pref|X--pre|X--pr|X--p)
       case X$# in
         X1) echo "missing argument to $1" >&2; exit 1;;
@@ -131,7 +134,7 @@ case X$command in
     cat <<EOH
 $0 --help
 $0 --list
-$0 [--insecure] --prefix=PREFIX PACKAGE...
+$0 [--insecure] [--no-check] --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   Xlist)
@@ -369,8 +372,14 @@ dromozoa_check() {
   esac
   if test "X$current_version" = "X$package_version"
   then
-    echo " $current_version, skip"
-    check=true
+    case X$no_check in
+      Xtrue)
+        echo " $current_version, install (no-check)"
+        check=false;;
+      *)
+        echo " $current_version, skip"
+        check=true;;
+    esac
   else
     echo " $current_version, install"
     check=false
