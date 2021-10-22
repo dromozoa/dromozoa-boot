@@ -51,7 +51,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 8.2.3452
+  echo 8.2.3551
 }
 
 dromozoa_package_version_m4() {
@@ -63,7 +63,7 @@ dromozoa_package_version_autoconf() {
 }
 
 dromozoa_package_version_automake() {
-  echo 1.16.4
+  echo 1.16.5
 }
 
 dromozoa_package_version_libtool() {
@@ -492,7 +492,7 @@ dromozoa_package_luarocks() {
 dromozoa_package_vim() {
   package=$1
   package_version=$2
-  package_url=https://github.com/vim/vim/archive/v$package_version.tar.gz
+  package_url=https://github.com/vim/vim/archive/refs/tags/v$package_version.tar.gz
   dromozoa_check "$package_version" vim --version
   case X$check in
     Xtrue) return;;
