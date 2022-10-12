@@ -39,7 +39,7 @@ dromozoa_package_version_lua53() {
 }
 
 dromozoa_package_version_lua54() {
-  echo 5.4.3
+  echo 5.4.4
 }
 
 dromozoa_package_version_luajit() {
@@ -47,11 +47,11 @@ dromozoa_package_version_luajit() {
 }
 
 dromozoa_package_version_luarocks() {
-  echo 3.7.0
+  echo 3.9.1
 }
 
 dromozoa_package_version_vim() {
-  echo 8.2.3551
+  echo 9.0.0735
 }
 
 dromozoa_package_version_m4() {
@@ -67,7 +67,7 @@ dromozoa_package_version_automake() {
 }
 
 dromozoa_package_version_libtool() {
-  echo 2.4.6
+  echo 2.4.7
 }
 
 dromozoa_package_version_screen() {
@@ -75,7 +75,7 @@ dromozoa_package_version_screen() {
 }
 
 dromozoa_package_version_tig() {
-  echo 2.5.4
+  echo 2.5.7
 }
 
 dromozoa_package_version_zeromq() {
@@ -83,11 +83,11 @@ dromozoa_package_version_zeromq() {
 }
 
 dromozoa_package_version_libjpeg() {
-  echo 9d
+  echo 9e
 }
 
 dromozoa_package_version_libpng() {
-  echo 1.6.37
+  echo 1.6.38
 }
 
 dromozoa_package_version_hook() {
