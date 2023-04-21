@@ -47,11 +47,11 @@ dromozoa_package_version_luajit() {
 }
 
 dromozoa_package_version_luarocks() {
-  echo 3.9.1
+  echo 3.9.2
 }
 
 dromozoa_package_version_vim() {
-  echo 9.0.0735
+  echo 9.0.1473
 }
 
 dromozoa_package_version_m4() {
@@ -71,11 +71,11 @@ dromozoa_package_version_libtool() {
 }
 
 dromozoa_package_version_screen() {
-  echo 4.8.0
+  echo 4.9.0
 }
 
 dromozoa_package_version_tig() {
-  echo 2.5.7
+  echo 2.5.8
 }
 
 dromozoa_package_version_zeromq() {
@@ -87,7 +87,7 @@ dromozoa_package_version_libjpeg() {
 }
 
 dromozoa_package_version_libpng() {
-  echo 1.6.38
+  echo 1.6.39
 }
 
 dromozoa_package_version_hook() {
@@ -557,15 +557,12 @@ dromozoa_package_screen() {
   package=$1
   package_version=$2
   package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
-  patch_url=https://github.com/dromozoa/dromozoa-boot/raw/master/$package-$package_version.patch
   dromozoa_check "$package_version" screen --version
   case X$check in
     Xtrue) return;;
   esac
-  dromozoa_curl "$patch_url"
-  patch_filename=`dromozoa_basename "$patch_url"`
   dromozoa_prepare "$package_url"
-  patch -p1 <"../$patch_filename"
+  ./autogen.sh
   dromozoa_build --enable-colors256
 }
 

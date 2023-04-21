@@ -54,6 +54,16 @@ chmod 755 dromozoa-boot
 * [dromozoa](https://github.com/dromozoa/)
     * [hook](https://github.com/dromozoa/dromozoa-hook/releases/)
 
+## Workaround: macOS 13.3.1
+
+* use environmental variable `CFLAGS=-Wno-error=implicit-function-declaration` to build screen.
+* use environmental variable `CXXFLAGS=-Wno-error=deprecated-declarations` to build zeromq.
+* use environmental variable `MACOSX_DEPLOYMENT_TARGET=13.0` to build luajit.
+
+```
+env CFLAGS=-Wno-error=implicit-function-declaration CXXFLAGS=-Wno-error=deprecated-declarations MACOSX_DEPLOYMENT_TARGET=13.0 ./run-opt.sh
+```
+
 ## Workaround: macOS 10.15.7
 
 * use environmental variable `CFLAGS=-Wno-error=implicit-function-declaration` to build screen.
@@ -63,16 +73,10 @@ chmod 755 dromozoa-boot
 env CFLAGS=-Wno-error=implicit-function-declaration MACOSX_DEPLOYMENT_TARGET=10.15 ./run-opt.sh
 ```
 
-## Prerequisites: RHEL 6 and derivatives
-
-```
-sudo yum install gcc gcc-c++ patch zip unzip ncurses-devel readline-devel zlib-devel
-```
-
 ## Prerequisites: RHEL 7 and derivatives
 
 ```
-sudo yum install gcc gcc-c++ patch zip unzip ncurses-devel readline-devel zlib-devel
+sudo yum install gcc gcc-c++ zip unzip ncurses-devel readline-devel zlib-devel
 ```
 
 ### autoconf
@@ -87,10 +91,16 @@ sudo yum install perl-Data-Dumper
 sudo yum install perl-Thread-Queue
 ```
 
+## Prerequisites: RHEL 6 and derivatives
+
+```
+sudo yum install gcc gcc-c++ zip unzip ncurses-devel readline-devel zlib-devel
+```
+
 ## Prerequisites: Amazon Linux 2
 
 ```
-sudo yum install gcc gcc-c++ patch ncurses-devel readline-devel zlib-devel
+sudo yum install gcc gcc-c++ ncurses-devel readline-devel zlib-devel
 ```
 
 ### autoconf
