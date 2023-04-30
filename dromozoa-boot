@@ -11,11 +11,11 @@
 #
 # dromozoa-boot is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with dromozoa-boot.  If not, see <http://www.gnu.org/licenses/>.
+# along with dromozoa-boot. If not, see <https://www.gnu.org/licenses/>.
 
 if (unset CDPATH) >/dev/null 2>&1
 then
@@ -39,7 +39,7 @@ dromozoa_package_version_lua53() {
 }
 
 dromozoa_package_version_lua54() {
-  echo 5.4.4
+  echo 5.4.5
 }
 
 dromozoa_package_version_luajit() {
@@ -51,7 +51,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 9.0.1473
+  echo 9.0.1499
 }
 
 dromozoa_package_version_m4() {
