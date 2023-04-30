@@ -11,11 +11,11 @@
 #
 # dromozoa-boot is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with dromozoa-boot.  If not, see <http://www.gnu.org/licenses/>.
+# along with dromozoa-boot. If not, see <https://www.gnu.org/licenses/>.
 
 ./dromozoa-boot --prefix=/opt/dromozoa m4 autoconf automake libtool screen tig zeromq libjpeg libpng hook
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks vim
