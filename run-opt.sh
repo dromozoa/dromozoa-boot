@@ -1,6 +1,6 @@
 #! /bin/sh -e
 
-# Copyright (C) 2018,2020,2021 Tomoyuki Fujimori <moyu@dromozoa.com>
+# Copyright (C) 2018,2020,2021,2023 Tomoyuki Fujimori <moyu@dromozoa.com>
 #
 # This file is part of dromozoa-boot.
 #
