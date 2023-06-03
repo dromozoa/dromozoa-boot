@@ -39,7 +39,7 @@ dromozoa_package_version_lua53() {
 }
 
 dromozoa_package_version_lua54() {
-  echo 5.4.5
+  echo 5.4.6
 }
 
 dromozoa_package_version_luajit() {
@@ -51,7 +51,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 9.0.1499
+  echo 9.0.1601
 }
 
 dromozoa_package_version_m4() {
