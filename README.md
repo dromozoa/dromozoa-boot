@@ -40,6 +40,8 @@ chmod 755 dromozoa-boot
     * [lua53](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
     * [lua54](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
 * [luajit](https://luajit.org/download.html)
+    * [browsable mirror](https://repo.or.cz/w/luajit-2.0.git)
+    * [GitHub mirror](https://github.com/LuaJIT/LuaJIT)
 * [luarocks](https://luarocks.github.io/luarocks/releases/)
 * [vim](https://github.com/vim/vim/tags)
 * [m4](https://ftp.gnu.org/gnu/m4/)
@@ -54,14 +56,14 @@ chmod 755 dromozoa-boot
 * [dromozoa](https://github.com/dromozoa/)
     * [hook](https://github.com/dromozoa/dromozoa-hook/releases/)
 
-## Workaround: macOS 13.3.1
+## Workaround: macOS 13.6.3
 
 * use environmental variable `CFLAGS=-Wno-error=implicit-function-declaration` to build screen.
-* use environmental variable `CXXFLAGS=-Wno-error=deprecated-declarations` to build zeromq.
+* use environmental variable `CXXFLAGS=-"Wno-error=deprecated-declarations -Wno-error=missing-braces"` to build zeromq.
 * use environmental variable `MACOSX_DEPLOYMENT_TARGET=13.0` to build luajit.
 
 ```
-env CFLAGS=-Wno-error=implicit-function-declaration CXXFLAGS=-Wno-error=deprecated-declarations MACOSX_DEPLOYMENT_TARGET=13.0 ./run-opt.sh
+env CFLAGS=-Wno-error=implicit-function-declaration CXXFLAGS="-Wno-error=deprecated-declarations -Wno-error=missing-braces" MACOSX_DEPLOYMENT_TARGET=13.0 ./run-opt.sh
 ```
 
 ## Workaround: macOS 10.15.7
