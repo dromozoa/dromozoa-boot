@@ -51,7 +51,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 9.0.2189
+  echo 9.1.0083
 }
 
 dromozoa_package_version_m4() {
@@ -83,11 +83,11 @@ dromozoa_package_version_zeromq() {
 }
 
 dromozoa_package_version_libjpeg() {
-  echo 9e
+  echo 9f
 }
 
 dromozoa_package_version_libpng() {
-  echo 1.6.40
+  echo 1.6.42
 }
 
 dromozoa_package_version_hook() {
@@ -546,7 +546,19 @@ dromozoa_package_autoconf() {
 
 dromozoa_package_automake() {
   dromozoa_require perl --version
-  dromozoa_package_gnu "$@"
+  package=$1
+  package_version=$2
+  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
+  patch_url=https://github.com/dromozoa/dromozoa-boot/raw/develop/$package-$package_version.patch
+  dromozoa_check "$package_version" "$package" --version
+  case X$check in
+    Xtrue) return;;
+  esac
+  dromozoa_curl "$patch_url"
+  patch_filename=`dromozoa_basename "$patch_url"`
+  dromozoa_prepare "$package_url"
+  patch -p1 <"../$patch_filename"
+  dromozoa_build
 }
 
 dromozoa_package_libtool() {
