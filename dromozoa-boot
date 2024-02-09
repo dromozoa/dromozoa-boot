@@ -549,7 +549,7 @@ dromozoa_package_automake() {
   package=$1
   package_version=$2
   package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
-  patch_url=https://raw.githubusercontent.com/dromozoa/dromozoa-boot/develop/$package-$package_version.patch
+  patch_url=https://raw.githubusercontent.com/dromozoa/dromozoa-boot/master/$package-$package_version.patch
   dromozoa_check "$package_version" "$package" --version
   case X$check in
     Xtrue) return;;
