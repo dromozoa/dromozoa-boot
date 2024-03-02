@@ -59,7 +59,7 @@ chmod 755 dromozoa-boot
 ## Workaround: macOS 13.6.3
 
 * use environmental variable `CFLAGS=-Wno-error=implicit-function-declaration` to build screen.
-* use environmental variable `CXXFLAGS=-"Wno-error=deprecated-declarations -Wno-error=missing-braces"` to build zeromq.
+* use environmental variable `CXXFLAGS="-Wno-error=deprecated-declarations -Wno-error=missing-braces"` to build zeromq.
 * use environmental variable `MACOSX_DEPLOYMENT_TARGET=13.0` to build luajit.
 
 ```
@@ -69,10 +69,11 @@ env CFLAGS=-Wno-error=implicit-function-declaration CXXFLAGS="-Wno-error=depreca
 ## Workaround: macOS 10.15.7
 
 * use environmental variable `CFLAGS=-Wno-error=implicit-function-declaration` to build screen.
+* use environmental variable `CXXFLAGS=-Wno-error=missing-braces` to build zeromq.
 * use environmental variable `MACOSX_DEPLOYMENT_TARGET=10.15` to build luajit.
 
 ```
-env CFLAGS=-Wno-error=implicit-function-declaration MACOSX_DEPLOYMENT_TARGET=10.15 ./run-opt.sh
+env CFLAGS=-Wno-error=implicit-function-declaration CXXFLAGS=-Wno-error=missing-braces MACOSX_DEPLOYMENT_TARGET=10.15 ./run-opt.sh
 ```
 
 ## Prerequisites: RHEL 7 and derivatives
