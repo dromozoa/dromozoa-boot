@@ -1,6 +1,6 @@
 #! /bin/sh -e
 
-# Copyright (C) 2018,2020,2021,2023 Tomoyuki Fujimori <moyu@dromozoa.com>
+# Copyright (C) 2018,2020,2021,2023,2024 Tomoyuki Fujimori <moyu@dromozoa.com>
 #
 # This file is part of dromozoa-boot.
 #
@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with dromozoa-boot. If not, see <https://www.gnu.org/licenses/>.
 
-./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" m4 autoconf automake libtool screen tig zeromq libjpeg libpng hook
+./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" m4 autoconf automake libtool screen tig libsodium zeromq libjpeg libpng hook
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa51" lua51 luajit luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa52" lua52 luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa53" lua53 luarocks vim
