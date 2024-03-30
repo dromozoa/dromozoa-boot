@@ -78,6 +78,10 @@ dromozoa_package_version_tig() {
   echo 2.5.8
 }
 
+dromozoa_package_version_libsodium() {
+  echo 1.0.19
+}
+
 dromozoa_package_version_zeromq() {
   echo 4.3.5
 }
@@ -138,7 +142,7 @@ $0 [--insecure] [--no-check] --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   Xlist)
-    for package in lua51 lua52 lua53 lua54 luajit luarocks vim m4 autoconf automake libtool screen tig zeromq libjpeg libpng hook
+    for package in lua51 lua52 lua53 lua54 luajit luarocks vim m4 autoconf automake libtool screen tig libsodium zeromq libjpeg libpng hook
     do
       package_version=`"dromozoa_package_version_$package"`
       echo "$package $package_version"
@@ -229,6 +233,23 @@ int main(int ac, char* av[]) {
 }
 EOH
   if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -llua -o "$name" >/dev/null 2>&1
+  then
+    "./$name"
+  fi
+}
+
+dromozoa_version_libsodium() {
+  name=_dromozoa_version_libsodium
+  cat <<EOH >"$name.c"
+#include <stdio.h>
+#include <sodium.h>
+
+int main(int ac, char* av[]) {
+  printf("%s\n", SODIUM_VERSION_STRING);
+  return 0;
+}
+EOH
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
   then
     "./$name"
   fi
@@ -334,6 +355,8 @@ dromozoa_version() {
         result=`expr "X$result" : 'Xtig version\( [0-9][0-9]*\.[0-9][0-9.]*\)' | sed 's/^.//'`
         echo "$result"
       fi;;
+    Xlibsodium)
+      dromozoa_version_libsodium;;
     Xzeromq)
       dromozoa_version_zeromq;;
     Xlibjpeg)
@@ -591,7 +614,20 @@ dromozoa_package_tig() {
   dromozoa_build
 }
 
+dromozoa_package_libsodium() {
+  package=$1
+  package_version=$2
+  package_url=https://download.libsodium.org/libsodium/releases/libsodium-$package_version-stable.tar.gz
+  dromozoa_check "$package_version" libsodium
+  case X$check in
+    Xtrue) return;;
+  esac
+  dromozoa_prepare "$package_url" libsodium-stable
+  dromozoa_build
+}
+
 dromozoa_package_zeromq() {
+  dromozoa_require libsodium
   package=$1
   package_version=$2
   package_url=https://github.com/zeromq/libzmq/releases/download/v$package_version/zeromq-$package_version.tar.gz
@@ -600,7 +636,10 @@ dromozoa_package_zeromq() {
     Xtrue) return;;
   esac
   dromozoa_prepare "$package_url"
-  dromozoa_build
+  sodium_CFLAGS=-I$prefix/include
+  sodium_LIBS="-L$prefix/lib -lsodium"
+  export sodium_CFLAGS sodium_LIBS
+  dromozoa_build --with-libsodium
 }
 
 dromozoa_package_libjpeg() {
