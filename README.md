@@ -15,7 +15,7 @@ chmod 755 dromozoa-boot
 ```
 (cd /opt && sudo mkdir -p dromozoa dromozoa51 dromozoa52 dromozoa53 dromozoa54)
 (cd /opt && sudo chown `id -u`:`id -g` dromozoa dromozoa51 dromozoa52 dromozoa53 dromozoa54)
-./dromozoa-boot --prefix=/opt/dromozoa m4 autoconf automake libtool screen tig zeromq libjpeg libpng hook
+./dromozoa-boot --prefix=/opt/dromozoa m4 autoconf automake libtool screen tig libsodium zeromq libjpeg libpng hook
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa53 lua53 luarocks vim
@@ -25,7 +25,7 @@ chmod 755 dromozoa-boot
 ### install to $HOME/prefixes/dromozoa
 
 ```
-./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" m4 autoconf automake libtool screen tig zeromq libjpeg libpng hook
+./dromozoa-boot --prefix="$HOME/prefixes/dromozoa" m4 autoconf automake libtool screen tig libsodium zeromq libjpeg libpng hook
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa51" lua51 luajit luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa52" lua52 luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa53" lua53 luarocks vim
@@ -50,6 +50,7 @@ chmod 755 dromozoa-boot
 * [libtool](https://ftp.gnu.org/gnu/libtool/)
 * [screen](https://ftp.gnu.org/gnu/screen/)
 * [tig](https://github.com/jonas/tig/releases)
+* [libsodium](https://download.libsodium.org/libsodium/releases/)
 * [zeromq](https://github.com/zeromq/libzmq/releases)
 * [libjpeg](http://www.ijg.org/)
 * [libpng](http://www.libpng.org/pub/png/libpng.html)
