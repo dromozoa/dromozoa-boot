@@ -249,7 +249,7 @@ int main(int ac, char* av[]) {
   return 0;
 }
 EOH
-  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lsodium -o "$name" >/dev/null 2>&1
   then
     "./$name"
   fi
