@@ -51,7 +51,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 9.1.0538
+  echo 9.1.0741
 }
 
 dromozoa_package_version_m4() {
@@ -63,7 +63,7 @@ dromozoa_package_version_autoconf() {
 }
 
 dromozoa_package_version_automake() {
-  echo 1.16.5
+  echo 1.17
 }
 
 dromozoa_package_version_libtool() {
@@ -71,7 +71,7 @@ dromozoa_package_version_libtool() {
 }
 
 dromozoa_package_version_screen() {
-  echo 4.9.1
+  echo 5.0.0
 }
 
 dromozoa_package_version_tig() {
@@ -91,7 +91,7 @@ dromozoa_package_version_libjpeg() {
 }
 
 dromozoa_package_version_libpng() {
-  echo 1.6.43
+  echo 1.6.44
 }
 
 dromozoa_package_version_hook() {
@@ -249,7 +249,7 @@ int main(int ac, char* av[]) {
   return 0;
 }
 EOH
-  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lzmq -o "$name" >/dev/null 2>&1
+  if gcc $CPPFLAGS $LDFLAGS -g -O2 "$name.c" -lsodium -o "$name" >/dev/null 2>&1
   then
     "./$name"
   fi
