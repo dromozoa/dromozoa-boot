@@ -592,13 +592,16 @@ dromozoa_package_screen() {
   package=$1
   package_version=$2
   package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
+  patch_url=https://raw.githubusercontent.com/dromozoa/dromozoa-boot/master/$package-$package_version.patch
   dromozoa_check "$package_version" screen --version
   case X$check in
     Xtrue) return;;
   esac
+  dromozoa_curl "$patch_url"
+  patch_filename=`dromozoa_basename "$patch_url"`
   dromozoa_prepare "$package_url"
-  ./autogen.sh
-  dromozoa_build --enable-colors256
+  patch -p1 <"../$patch_filename"
+  dromozoa_build
 }
 
 dromozoa_package_tig() {
