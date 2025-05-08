@@ -51,7 +51,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 9.1.1265
+  echo 9.1.1370
 }
 
 dromozoa_package_version_m4() {
@@ -68,6 +68,10 @@ dromozoa_package_version_automake() {
 
 dromozoa_package_version_libtool() {
   echo 2.5.4
+}
+
+dromozoa_package_version_bison() {
+  echo 3.8.2
 }
 
 dromozoa_package_version_screen() {
@@ -91,7 +95,7 @@ dromozoa_package_version_libjpeg() {
 }
 
 dromozoa_package_version_libpng() {
-  echo 1.6.47
+  echo 1.6.48
 }
 
 dromozoa_package_version_hook() {
@@ -585,6 +589,10 @@ dromozoa_package_automake() {
 }
 
 dromozoa_package_libtool() {
+  dromozoa_package_gnu "$@"
+}
+
+dromozoa_package_bison() {
   dromozoa_package_gnu "$@"
 }
 
