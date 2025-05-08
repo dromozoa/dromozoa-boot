@@ -70,6 +70,10 @@ dromozoa_package_version_libtool() {
   echo 2.5.4
 }
 
+dromozoa_package_version_bison() {
+  echo 3.8.2
+}
+
 dromozoa_package_version_screen() {
   echo 5.0.0
 }
@@ -585,6 +589,10 @@ dromozoa_package_automake() {
 }
 
 dromozoa_package_libtool() {
+  dromozoa_package_gnu "$@"
+}
+
+dromozoa_package_bison() {
   dromozoa_package_gnu "$@"
 }
 
