@@ -488,7 +488,7 @@ dromozoa_package_lua54() {
 dromozoa_package_luajit() {
   package=$1
   package_version=$2
-  package_url="https://luajit.org/download/LuaJIT-$package_version.tar.gz"
+  package_url="https://dromozoa.s3.amazonaws.com/mirror/LuaJIT-$package_version.tar.gz"
   dromozoa_check "$package_version" luajit -v
   case X$check in
     Xtrue) return;;
