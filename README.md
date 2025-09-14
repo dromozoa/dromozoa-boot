@@ -97,9 +97,21 @@ sudo yum install perl-Thread-Queue
 
 ## Prerequisites: RHEL 6 and derivatives
 
+* use RedHat Development Toolset 9.
+
 ```
 sudo yum install gcc gcc-c++ zip unzip ncurses-devel readline-devel zlib-devel pam-devel
 ```
+
+### screen
+
+```
+sudo yum install pam-devel
+```
+
+### tig
+
+* use environmental variable `LIBS=-ltinfo`.
 
 ## Prerequisites: Amazon Linux 2
 
