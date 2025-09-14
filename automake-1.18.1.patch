@@ -1,0 +1,19 @@
+diff -uprN --ignore-space automake-1.18.1/bin/automake.in automake-1.18.1-modified/bin/automake.in
+--- automake-1.18.1/bin/automake.in	2025-05-22 01:46:43
++++ automake-1.18.1-modified/bin/automake.in	2025-09-14 19:12:44
+@@ -737,6 +737,7 @@ register_language ('name' => 'objc',
+ 		   'compiler' => 'OBJCCOMPILE',
+ 		   'compile_flag' => '-c',
+ 		   'output_flag' => '-o',
++		   'libtool_tag' => 'CC',
+ 		   'libtool_flag' => 'OBJC',
+ 		   'lder' => 'OBJCLD',
+ 		   'ld' => '$(OBJC)',
+@@ -756,6 +757,7 @@ register_language ('name' => 'objcxx',
+ 		   'compiler' => 'OBJCXXCOMPILE',
+ 		   'compile_flag' => '-c',
+ 		   'output_flag' => '-o',
++		   'libtool_tag' => 'CXX',
+ 		   'libtool_flag' => 'OBJCXX',
+ 		   'lder' => 'OBJCXXLD',
+ 		   'ld' => '$(OBJCXX)',

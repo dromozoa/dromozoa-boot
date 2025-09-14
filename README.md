@@ -98,7 +98,7 @@ sudo yum install perl-Thread-Queue
 ## Prerequisites: RHEL 6 and derivatives
 
 ```
-sudo yum install gcc gcc-c++ zip unzip ncurses-devel readline-devel zlib-devel
+sudo yum install gcc gcc-c++ zip unzip ncurses-devel readline-devel zlib-devel pam-devel
 ```
 
 ## Prerequisites: Amazon Linux 2
