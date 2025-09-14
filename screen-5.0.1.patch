@@ -1,0 +1,12 @@
+diff -uprN screen-5.0.1/encoding.c screen-5.0.1-modified/encoding.c
+--- screen-5.0.1/encoding.c	2025-05-16 00:31:27
++++ screen-5.0.1-modified/encoding.c	2025-09-14 18:57:55
+@@ -1066,7 +1066,7 @@ void utf8_handle_comb(unsigned int c, struct mchar *mc
+ 	}
+ 	combchars[i]->c1 = c1;
+ 	combchars[i]->c2 = c;
+-	mc->image = i & 0xff;
++	mc->image = i + 0xd800;
+ 	mc->font = (i >> 8) + 0xd8;
+ 	comb_tofront(i);
+ }
