@@ -1,6 +1,6 @@
 #! /bin/sh -e
 
-# Copyright (C) 2016-2025 Tomoyuki Fujimori <moyu@dromozoa.com>
+# Copyright (C) 2016-2026 Tomoyuki Fujimori <moyu@dromozoa.com>
 #
 # This file is part of dromozoa-boot.
 #
@@ -47,15 +47,15 @@ dromozoa_package_version_luajit() {
 }
 
 dromozoa_package_version_luarocks() {
-  echo 3.12.2
+  echo 3.13.0
 }
 
 dromozoa_package_version_vim() {
-  echo 9.1.1757
+  echo 9.2.0173
 }
 
 dromozoa_package_version_m4() {
-  echo 1.4.20
+  echo 1.4.21
 }
 
 dromozoa_package_version_autoconf() {
@@ -79,11 +79,11 @@ dromozoa_package_version_screen() {
 }
 
 dromozoa_package_version_tig() {
-  echo 2.5.12
+  echo 2.6.0
 }
 
 dromozoa_package_version_libsodium() {
-  echo 1.0.20
+  echo 1.0.21
 }
 
 dromozoa_package_version_zeromq() {
@@ -91,11 +91,11 @@ dromozoa_package_version_zeromq() {
 }
 
 dromozoa_package_version_libjpeg() {
-  echo 9f
+  echo 10
 }
 
 dromozoa_package_version_libpng() {
-  echo 1.6.50
+  echo 1.6.55
 }
 
 dromozoa_package_version_hook() {
@@ -672,7 +672,7 @@ dromozoa_package_libjpeg() {
 dromozoa_package_libpng() {
   package=$1
   package_version=$2
-  package_url=https://jaist.dl.sourceforge.net/project/libpng/libpng16/$package_version/libpng-$package_version.tar.gz
+  package_url=https://downloads.sourceforge.net/project/libpng/libpng16/$package_version/libpng-$package_version.tar.gz
   dromozoa_check "$package_version" libpng
   case X$check in
     Xtrue) return;;
