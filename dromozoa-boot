@@ -42,6 +42,10 @@ dromozoa_package_version_lua54() {
   echo 5.4.8
 }
 
+dromozoa_package_version_lua55() {
+  echo 5.5.0
+}
+
 dromozoa_package_version_luajit() {
   echo 2.0.5
 }
@@ -146,7 +150,7 @@ $0 [--insecure] [--no-check] --prefix=PREFIX PACKAGE...
 EOH
     exit;;
   Xlist)
-    for package in lua51 lua52 lua53 lua54 luajit luarocks vim m4 autoconf automake libtool screen tig libsodium zeromq libjpeg libpng hook
+    for package in lua51 lua52 lua53 lua54 lua55 luajit luarocks vim m4 autoconf automake libtool screen tig libsodium zeromq libjpeg libpng hook
     do
       package_version=`"dromozoa_package_version_$package"`
       echo "$package $package_version"
@@ -482,6 +486,10 @@ dromozoa_package_lua53() {
 }
 
 dromozoa_package_lua54() {
+  dromozoa_package_lua "$@"
+}
+
+dromozoa_package_lua55() {
   dromozoa_package_lua "$@"
 }
 
