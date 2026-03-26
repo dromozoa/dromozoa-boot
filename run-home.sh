@@ -22,3 +22,4 @@
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa52" lua52 luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa53" lua53 luarocks vim
 ./dromozoa-boot --prefix="$HOME/prefixes/dromozoa54" lua54 luarocks vim
+./dromozoa-boot --prefix="$HOME/prefixes/dromozoa55" lua55 luarocks vim
