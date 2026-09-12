@@ -57,6 +57,12 @@ chmod 755 dromozoa-boot
 * [dromozoa](https://github.com/dromozoa/)
     * [hook](https://github.com/dromozoa/dromozoa-hook/releases/)
 
+## Prerequisites: Raspberry Pi OS / Debian 13 (trixie)
+
+```
+sudo apt install libncurses-dev libreadline-dev libpam0g-dev zlib1g-dev
+```
+
 ## Workaround: macOS 13.6.3
 
 * use environmental variable `CFLAGS=-Wno-error=implicit-function-declaration` to build screen.
