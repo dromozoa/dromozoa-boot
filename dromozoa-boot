@@ -47,7 +47,7 @@ dromozoa_package_version_lua55() {
 }
 
 dromozoa_package_version_luajit() {
-  echo 2.0.5
+  echo 2.1.1788856981
 }
 
 dromozoa_package_version_luarocks() {
@@ -173,7 +173,8 @@ case X`uname` in
     case X$LDFLAGS in
       X) LDFLAGS="-L$prefix/lib";;
       *) LDFLAGS="-L$prefix/lib $LDFLAGS";;
-    esac;;
+    esac
+    ;;
   *)
     case X$LDFLAGS in
       X) LDFLAGS="-L$prefix/lib -Wl,-rpath -Wl,$prefix/lib";;
@@ -498,6 +499,13 @@ dromozoa_package_luajit() {
     Xtrue) return;;
   esac
   dromozoa_prepare "$package_url"
+
+  case X`uname` in
+    XDarwin)
+      MACOSX_DEPLOYMENT_TARGET=`sw_vers -productVersion`
+      export MACOSX_DEPLOYMENT_TARGET;;
+  esac
+
   make PREFIX="$prefix"
   make PREFIX="$prefix" install
 }
