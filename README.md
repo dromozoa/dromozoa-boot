@@ -13,8 +13,8 @@ chmod 755 dromozoa-boot
 ### install to /opt/dromozoa
 
 ```
-(cd /opt && sudo mkdir -p dromozoa dromozoa51 dromozoa52 dromozoa53 dromozoa54)
-(cd /opt && sudo chown `id -u`:`id -g` dromozoa dromozoa51 dromozoa52 dromozoa53 dromozoa54)
+(cd /opt && sudo mkdir -p dromozoa dromozoa51 dromozoa52 dromozoa53 dromozoa54 dromozoa55)
+(cd /opt && sudo chown `id -u`:`id -g` dromozoa dromozoa51 dromozoa52 dromozoa53 dromozoa54 dromozoa55)
 ./dromozoa-boot --prefix=/opt/dromozoa m4 autoconf automake libtool screen tig libsodium zeromq libjpeg libpng hook
 ./dromozoa-boot --prefix=/opt/dromozoa51 lua51 luajit luarocks vim
 ./dromozoa-boot --prefix=/opt/dromozoa52 lua52 luarocks vim
