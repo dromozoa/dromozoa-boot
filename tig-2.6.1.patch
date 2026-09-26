@@ -1,0 +1,13 @@
+diff -uprN tig-2.6.1/configure tig-2.6.1-modified/configure
+--- tig-2.6.1/configure	2026-06-14 02:25:29
++++ tig-2.6.1-modified/configure	2026-09-26 18:59:54
+@@ -4071,9 +4071,6 @@ fi
+ 		PKG_CONFIG=""
+ 	fi
+ fi
+-if test -z "$PKG_CONFIG"; then
+-	as_fn_error $? "pkg-config not found" "$LINENO" 5
+-fi
+ 
+ 
+ 

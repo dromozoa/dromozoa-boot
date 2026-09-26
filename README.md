@@ -39,6 +39,7 @@ chmod 755 dromozoa-boot
     * [lua52](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
     * [lua53](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
     * [lua54](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
+    * [lua55](https://dromozoa.s3.amazonaws.com/pub/index.html?prefix=pub%2Fdromozoa-autotoolize%2F1.3%2F)
 * [luajit](https://luajit.org/download.html)
     * [browsable mirror](https://repo.or.cz/w/luajit-2.0.git)
     * [GitHub mirror](https://github.com/LuaJIT/LuaJIT)
@@ -56,6 +57,12 @@ chmod 755 dromozoa-boot
 * [libpng](http://www.libpng.org/pub/png/libpng.html)
 * [dromozoa](https://github.com/dromozoa/)
     * [hook](https://github.com/dromozoa/dromozoa-hook/releases/)
+
+## Prerequisites: Raspberry Pi OS / Debian 13 (trixie)
+
+```
+sudo apt install libncurses-dev libreadline-dev libpam0g-dev zlib1g-dev
+```
 
 ## Workaround: macOS 13.6.3
 
