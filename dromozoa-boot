@@ -39,11 +39,11 @@ dromozoa_package_version_lua53() {
 }
 
 dromozoa_package_version_lua54() {
-  echo 5.4.8
+  echo 5.4.9
 }
 
 dromozoa_package_version_lua55() {
-  echo 5.5.0
+  echo 5.5.1
 }
 
 dromozoa_package_version_luajit() {
@@ -55,7 +55,7 @@ dromozoa_package_version_luarocks() {
 }
 
 dromozoa_package_version_vim() {
-  echo 9.2.0173
+  echo 9.2.1132
 }
 
 dromozoa_package_version_m4() {
@@ -63,31 +63,27 @@ dromozoa_package_version_m4() {
 }
 
 dromozoa_package_version_autoconf() {
-  echo 2.72
+  echo 2.73
 }
 
 dromozoa_package_version_automake() {
-  echo 1.18.1
+  echo 1.19
 }
 
 dromozoa_package_version_libtool() {
-  echo 2.5.4
-}
-
-dromozoa_package_version_bison() {
-  echo 3.8.2
+  echo 2.6.2
 }
 
 dromozoa_package_version_screen() {
-  echo 5.0.1
+  echo 5.0.2
 }
 
 dromozoa_package_version_tig() {
-  echo 2.6.0
+  echo 2.6.1
 }
 
 dromozoa_package_version_libsodium() {
-  echo 1.0.21
+  echo 1.0.22
 }
 
 dromozoa_package_version_zeromq() {
@@ -99,7 +95,7 @@ dromozoa_package_version_libjpeg() {
 }
 
 dromozoa_package_version_libpng() {
-  echo 1.6.55
+  echo 1.6.58
 }
 
 dromozoa_package_version_hook() {
@@ -600,24 +596,8 @@ dromozoa_package_libtool() {
   dromozoa_package_gnu "$@"
 }
 
-dromozoa_package_bison() {
-  dromozoa_package_gnu "$@"
-}
-
 dromozoa_package_screen() {
-  package=$1
-  package_version=$2
-  package_url=https://ftp.gnu.org/gnu/$package/$package-$package_version.tar.gz
-  patch_url=https://raw.githubusercontent.com/dromozoa/dromozoa-boot/master/$package-$package_version.patch
-  dromozoa_check "$package_version" screen --version
-  case X$check in
-    Xtrue) return;;
-  esac
-  dromozoa_curl "$patch_url"
-  patch_filename=`dromozoa_basename "$patch_url"`
-  dromozoa_prepare "$package_url"
-  patch -p1 <"../$patch_filename"
-  dromozoa_build
+  dromozoa_package_gnu "$@"
 }
 
 dromozoa_package_tig() {
