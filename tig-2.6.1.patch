@@ -1,6 +1,6 @@
 diff -uprN tig-2.6.1/configure tig-2.6.1-modified/configure
 --- tig-2.6.1/configure	2026-06-14 02:25:29
-+++ tig-2.6.1-modified/configure	2026-09-26 18:59:54
++++ tig-2.6.1-modified/configure	2026-09-27 09:05:15
 @@ -4071,9 +4071,6 @@ fi
  		PKG_CONFIG=""
  	fi
@@ -11,3 +11,15 @@ diff -uprN tig-2.6.1/configure tig-2.6.1-modified/configure
  
  
  
+diff -uprN tig-2.6.1/src/stage.c tig-2.6.1-modified/src/stage.c
+--- tig-2.6.1/src/stage.c	2026-06-14 02:25:29
++++ tig-2.6.1-modified/src/stage.c	2026-09-27 09:06:26
+@@ -347,7 +347,7 @@ stage_insert_chunk(struct view *view, struct chunk_hea
+ 		const char *text = box_text(line);
+ 
+ 		if (!add_line_text_at(view, after_lineno++, text, line->type, 1))
+-			return false;
++			return NULL;
+ 	}
+ 
+ 	return view->line + after_lineno;
