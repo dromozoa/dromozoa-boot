@@ -381,7 +381,7 @@ dromozoa_version() {
 }
 
 dromozoa_require() {
-  printf "checking version of $1..."
+  printf "checking version of %s..." "$1"
   current_version=`dromozoa_version "$@"`
   case X$current_version in
     X) echo " not found, error"; exit 1;;
@@ -393,12 +393,12 @@ check=false
 dromozoa_check() {
   package_version=$1
   shift
-  printf "checking version of $1..."
+  printf "checking version of %s..." "$1"
   current_version=`dromozoa_version "$@"`
   case X$current_version in
     X) current_version="not found";;
   esac
-  if test "X$current_version" = "X$package_version"
+  if test "$current_version" = "$package_version"
   then
     case X$no_check in
       Xtrue)
