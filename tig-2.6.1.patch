@@ -23,3 +23,24 @@ diff -uprN tig-2.6.1/src/stage.c tig-2.6.1-modified/src/stage.c
  	}
  
  	return view->line + after_lineno;
+diff -uprN tig-2.6.1/src/ui.c tig-2.6.1-modified/src/ui.c
+--- tig-2.6.1/src/ui.c	2026-06-14 02:25:29
++++ tig-2.6.1-modified/src/ui.c	2026-09-27 09:09:18
+@@ -285,7 +285,7 @@ open_file_finder(const char *commit)
+ 
+ 	if (!file_finder_read(&finder, commit)) {
+ 		file_finder_done(&finder);
+-		return false;
++		return NULL;
+ 	}
+ 
+ 	getmaxyx(stdscr, finder.height, finder.width);
+@@ -293,7 +293,7 @@ open_file_finder(const char *commit)
+ 	finder.win = newwin(finder.height, finder.width, 0, 0);
+ 	if (!finder.win) {
+ 		file_finder_done(&finder);
+-		return false;
++		return NULL;
+ 	}
+ 
+ 	finder.keymap = get_keymap("search", STRING_SIZE("search"));
