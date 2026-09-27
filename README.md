@@ -58,94 +58,14 @@ chmod 755 dromozoa-boot
 * [dromozoa](https://github.com/dromozoa/)
     * [hook](https://github.com/dromozoa/dromozoa-hook/releases/)
 
-## Prerequisites: Raspberry Pi OS / Debian 13 (trixie)
+## Prerequisites: Ubuntu 26.04 / Raspberry Pi OS (Debian Trixie)
 
 ```
-sudo apt install libncurses-dev libreadline-dev libpam0g-dev zlib1g-dev
+sudo apt install gcc g++ make unzip libcrypt-dev libncurses-dev libpam0g-dev libreadline-dev zlib1g-dev
 ```
 
-## Workaround: macOS 13.6.3
-
-* use environmental variable `CFLAGS=-Wno-error=implicit-function-declaration` to build screen.
-* use environmental variable `CXXFLAGS="-Wno-error=deprecated-declarations -Wno-error=missing-braces"` to build zeromq.
-* use environmental variable `MACOSX_DEPLOYMENT_TARGET=13.0` to build luajit.
+## Prerequisites: RHEL 10 and derivatives
 
 ```
-env CFLAGS=-Wno-error=implicit-function-declaration CXXFLAGS="-Wno-error=deprecated-declarations -Wno-error=missing-braces" MACOSX_DEPLOYMENT_TARGET=13.0 ./run-opt.sh
-```
-
-## Workaround: macOS 10.15.7
-
-* use environmental variable `CFLAGS=-Wno-error=implicit-function-declaration` to build screen.
-* use environmental variable `CXXFLAGS=-Wno-error=missing-braces` to build zeromq.
-* use environmental variable `MACOSX_DEPLOYMENT_TARGET=10.15` to build luajit.
-
-```
-env CFLAGS=-Wno-error=implicit-function-declaration CXXFLAGS=-Wno-error=missing-braces MACOSX_DEPLOYMENT_TARGET=10.15 ./run-opt.sh
-```
-
-## Prerequisites: RHEL 7 and derivatives
-
-```
-sudo yum install gcc gcc-c++ zip unzip ncurses-devel readline-devel zlib-devel
-```
-
-### autoconf
-
-```
-sudo yum install perl-Data-Dumper
-```
-
-### automake
-
-```
-sudo yum install perl-Thread-Queue
-```
-
-## Prerequisites: RHEL 6 and derivatives
-
-* use RedHat Development Toolset 9.
-
-```
-sudo yum install gcc gcc-c++ zip unzip ncurses-devel readline-devel zlib-devel pam-devel
-```
-
-### screen
-
-```
-sudo yum install pam-devel
-```
-
-### tig
-
-* use environmental variable `LIBS=-ltinfo`.
-
-## Prerequisites: Amazon Linux 2
-
-```
-sudo yum install gcc gcc-c++ ncurses-devel readline-devel zlib-devel
-```
-
-### autoconf
-
-```
-sudo yum install perl-Data-Dumper
-```
-
-### automake
-
-```
-sudo yum install perl-Thread-Queue
-```
-
-## Prerequisites: Raspbian Stretch Lite
-
-```
-sudo apt-get install libncursesw5-dev libreadline-dev
-```
-
-## Prerequisites: Debian 8
-
-```
-sudo apt-get install gcc g++ curl make unzip zlib1g-dev libncursesw5-dev libreadline-dev
+sudo dnf install gcc gcc-c++ patch unzip ncurses-devel readline-devel pam-devel zlib-devel perl-File-Compare perl-File-Copy perl-Thread-Queue
 ```
